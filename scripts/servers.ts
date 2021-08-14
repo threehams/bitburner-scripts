@@ -18,31 +18,31 @@ export async function main(ns: BitBurner) {
   }
   const servers = await serverList(ns, column, sortOrder);
 
-  servers.forEach(
-    ({
-      growAmount,
-      hackLevel,
-      // hackValue,
-      hasRoot,
-      incomeRate,
-      name,
-      security,
-      serverMoney,
-    }) => {
-      ns.tprint(
-        [
-          hasRoot ? "🟩" : "🟥",
-          formatNumber(hackLevel.toFixed(0)).padStart(5),
-          formatNumber(security.toFixed(0)).padStart(6),
-          `$${formatNumber(serverMoney.toFixed(0))}`.padStart(16),
-          // `$${formatNumber(hackValue.toFixed(0))}`.padStart(14),
-          `$${formatNumber(incomeRate.toFixed(0))}/sec`.padStart(14),
-          formatNumber(growAmount.toFixed(0)).padStart(5),
-          name,
-        ].join(" ")
-      );
-    }
-  );
+  servers
+    .filter((server) => server.hasRoot)
+    .forEach(
+      ({
+        growAmount,
+        hackLevel,
+        hasRoot,
+        incomeRate,
+        name,
+        security,
+        serverMoney,
+      }) => {
+        ns.tprint(
+          [
+            hasRoot ? "🟩" : "🟥",
+            formatNumber(hackLevel.toFixed(0)).padStart(5),
+            formatNumber(security.toFixed(0)).padStart(6),
+            `$${formatNumber(serverMoney.toFixed(0))}`.padStart(16),
+            `$${formatNumber(incomeRate.toFixed(0))}/sec`.padStart(14),
+            formatNumber(growAmount.toFixed(0)).padStart(5),
+            name,
+          ].join(" ")
+        );
+      }
+    );
 }
 
 const dive = (source: string, last: string, ns: BitBurner): string[] => {

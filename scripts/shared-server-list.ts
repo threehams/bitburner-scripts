@@ -15,8 +15,8 @@ export type SortOrder = typeof SORT_ORDERS[number];
 
 export const serverList = async (
   ns: BitBurner,
-  column: Column,
-  sortOrder: SortOrder
+  column: Column = "hackLevel",
+  sortOrder: SortOrder = "asc"
 ) => {
   const owned = ["home"].concat(ns.getPurchasedServers());
 

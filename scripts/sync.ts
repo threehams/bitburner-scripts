@@ -7,4 +7,9 @@ export async function main(ns: BitBurner) {
   for (const file of manifest) {
     await ns.wget(`http://localhost:18718/${file}`, file.split("_").pop());
   }
+  for (const server of ns.getPurchasedServers()) {
+    for (const file of manifest) {
+      ns.scp(file, server);
+    }
+  }
 }
