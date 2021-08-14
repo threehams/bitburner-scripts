@@ -5,6 +5,6 @@ export async function main(ns: BitBurner) {
   const manifest = JSON.parse(ns.read("manifest.txt") as string);
   ns.rm("manifest.txt");
   for (const file of manifest) {
-    await ns.wget(`http://localhost:18718/${file}`, file);
+    await ns.wget(`http://localhost:18718/${file}`, file.split("_").pop());
   }
 }
