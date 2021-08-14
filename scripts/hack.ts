@@ -31,13 +31,20 @@ export async function main(ns: BitBurner) {
 
   ns.tprint(`running hack from against ${target}`);
 
-  for (const source of sources) {
-    ns.exec(
-      "loop-hack.js",
-      source,
-      getThreadCount(ns, source, RAM_USAGE),
-      target
-    );
+  while (true) {
+    const hackTime = ns.getHackTime(target);
+
+    for (const source of sources) {
+      ns.killall(source);
+      ns.exec(
+        "loop-hack.js",
+        source,
+        getThreadCount(ns, source, RAM_USAGE),
+        target
+      );
+    }
+
+    await ns.sleep(hackTime * 1000 + 1);
   }
 }
 
