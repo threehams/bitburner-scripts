@@ -24,7 +24,7 @@ export async function main(ns: BitBurner) {
       ns.tprint(
         `${
           script === "single-grow.js" ? "growing" : "hacking"
-        } target: ${target} from ${sources} servers`
+        } target: ${target} from ${sources.length} servers`
       );
     }
 
