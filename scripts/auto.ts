@@ -1,10 +1,9 @@
 import { BitBurner } from "../types/bitburner";
 import { serverList } from "./shared-server-list";
 
-const RAM_USAGE = 1.7;
-
 export async function main(ns: BitBurner) {
-  const verbose = ns.args[0] === "-v";
+  const verbose = ns.args.includes("-v");
+  const once = ns.args.includes("-o");
   const sources = ns.getPurchasedServers();
 
   while (true) {
@@ -12,31 +11,41 @@ export async function main(ns: BitBurner) {
     const growServer = (await serverList(ns, "growRate", "desc"))[0];
     const hackTime = (ns.getHackTime(hackServer.name) + 1) * 1000;
     const growTime = (ns.getGrowTime(growServer.name) + 1) * 1000;
-
     const script =
-      hackServer.incomeRate > growServer.growRate
+      hackServer.incomeRate > growServer.growRate * 2
         ? "single-hack.js"
         : "single-grow.js";
 
+    const ram = ns.getScriptRam(script);
+    const sleepTime = script === "single-grow.js" ? growTime : hackTime;
+
     const target =
       script === "single-grow.js" ? growServer.name : hackServer.name;
+
+    const totalThreads = sources.reduce((sum, source) => {
+      return sum + getThreadCount(ns, source, ram);
+    }, 0);
+
     if (verbose) {
       ns.tprint(
         `${
           script === "single-grow.js" ? "growing" : "hacking"
-        } target: ${target} from ${sources.length} servers`
+        } target: ${target} on ${totalThreads} threads, ETA: ${(
+          sleepTime / 1000
+        ).toFixed(0)}s`
       );
     }
 
     for (const source of sources) {
-      ns.killall(source);
-
-      if (getThreadCount(ns, source, RAM_USAGE)) {
-        ns.exec(script, source, getThreadCount(ns, source, RAM_USAGE), target);
+      if (getThreadCount(ns, source, ram)) {
+        ns.exec(script, source, getThreadCount(ns, source, ram), target);
       }
     }
 
-    await ns.sleep(script === "single-grow.js" ? growTime : hackTime);
+    await ns.sleep(sleepTime);
+    if (once) {
+      return;
+    }
   }
 }
 
