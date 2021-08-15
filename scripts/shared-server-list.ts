@@ -8,6 +8,7 @@ export const COLUMNS = [
   "name",
   "security",
   "serverMoney",
+  "growRate",
 ] as const;
 export type Column = typeof COLUMNS[number];
 export const SORT_ORDERS = ["asc", "desc"] as const;
@@ -19,6 +20,8 @@ export const serverList = async (
   sortOrder: SortOrder = "asc"
 ) => {
   const owned = ["home"].concat(ns.getPurchasedServers());
+  ns.growthAnalyze; // force this to be calculated for RAM usage
+  ns.getHackTime;
 
   const servers = dive("home", "home", ns)
     .slice()
@@ -32,20 +35,28 @@ export const serverList = async (
   return servers
     .filter((server) => !owned.includes(server))
     .map((server) => {
+      const hasRoot = ns.hasRootAccess(server);
+      const serverMoney = ns.getServerMoneyAvailable(server);
+      const maxServerMoney = ns.getServerMaxMoney(server);
       const hackValue =
         (ns.hackAnalyzePercent(server) / 100) *
-        ns.getServerMoneyAvailable(server) *
+        serverMoney *
         ns.hackChance(server);
-      const growAmount = ns.getServerGrowth(server);
+      const growCount = ns.growthAnalyze(server, 2);
+      const growTime = ns.getGrowTime(server);
+      const growRate = hasRoot
+        ? Math.min(serverMoney, maxServerMoney - serverMoney) /
+          (growCount * growTime)
+        : 0;
       return {
-        hasRoot: ns.hasRootAccess(server),
+        hasRoot,
         name: server,
         hackLevel: ns.getServerRequiredHackingLevel(server),
         security: ns.getServerSecurityLevel(server),
-        serverMoney: ns.getServerMoneyAvailable(server),
+        serverMoney,
         hackValue,
         incomeRate: hackValue / ns.getHackTime(server),
-        growAmount,
+        growRate,
       };
     })
     .sort((a, b) => {
@@ -64,18 +75,4 @@ const dive = (source: string, last: string, ns: BitBurner): string[] => {
       return dive(server, source, ns);
     })
     .concat([source]);
-};
-
-const isValidSort = (sort: string): sort is Column => {
-  if (!COLUMNS.includes(sort as Column)) {
-    return false;
-  }
-  return true;
-};
-
-const isValidSortOrder = (order: string): order is SortOrder => {
-  if (!SORT_ORDERS.includes(order as SortOrder)) {
-    return false;
-  }
-  return true;
 };

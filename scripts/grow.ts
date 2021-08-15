@@ -8,15 +8,18 @@ export async function main(ns: BitBurner) {
 
   while (true) {
     const target =
-      ns.args[0] ?? (await serverList(ns, "incomeRate", "desc"))[0].name;
-    const hackTime = (ns.getHackTime(target) + 1) * 1000;
+      ns.args[0] ??
+      (await serverList(ns, "growRate", "desc")).filter(
+        (server) => server.hasRoot
+      )[0].name;
+    const hackTime = (ns.getGrowTime(target) + 1) * 1000;
 
     for (const source of sources) {
       ns.killall(source);
 
       if (getThreadCount(ns, source, RAM_USAGE)) {
         ns.exec(
-          "single-hack.js",
+          "single-grow.js",
           source,
           getThreadCount(ns, source, RAM_USAGE),
           target

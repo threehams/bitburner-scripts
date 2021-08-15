@@ -22,7 +22,7 @@ export async function main(ns: BitBurner) {
     .filter((server) => server.hasRoot)
     .forEach(
       ({
-        growAmount,
+        growRate,
         hackLevel,
         hasRoot,
         incomeRate,
@@ -37,7 +37,7 @@ export async function main(ns: BitBurner) {
             formatNumber(security.toFixed(0)).padStart(6),
             `$${formatNumber(serverMoney.toFixed(0))}`.padStart(16),
             `$${formatNumber(incomeRate.toFixed(0))}/sec`.padStart(14),
-            formatNumber(growAmount.toFixed(0)).padStart(5),
+            `$${formatNumber(growRate.toFixed(0))}/sec`.padStart(10),
             name,
           ].join(" ")
         );
