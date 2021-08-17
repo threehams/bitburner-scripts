@@ -1,4 +1,6 @@
 import { BitBurner } from "../types/bitburner";
+import { formatNumber } from "./formatNumber";
+import { findArg } from "./shared-args";
 import {
   Column,
   COLUMNS,
@@ -7,8 +9,23 @@ import {
   SORT_ORDERS,
 } from "./shared-server-list";
 
+const sortColumns: { [key: string]: Column | undefined } = {
+  l: "hackLevel",
+  r: "hackRate",
+  v: "hackValue",
+  g: "growRate",
+  m: "serverMoney",
+  t: "fullGrowTime",
+};
+
 export async function main(ns: BitBurner) {
-  const [, column = "hackLevel", sortOrder = "asc"] = ns.args;
+  const threads = findArg(ns.args, { key: "t", defaultValue: 1 });
+  const sortOrder = ns.args.includes("-r") ? "desc" : "asc";
+  const column =
+    sortColumns[
+      ns.args.find((flag) => flag.startsWith("-s"))?.replace("-s", "") ?? "l"
+    ] ?? "hackLevel";
+  const showAll = findArg(ns.args, { key: "a", defaultValue: false });
 
   if (!isValidSort(column) || !isValidSortOrder(sortOrder)) {
     ns.tprint(`Usage: run walk.js --sort [column] [sort-order]`);
@@ -16,30 +33,41 @@ export async function main(ns: BitBurner) {
     ns.tprint(`Available sort orders: ${SORT_ORDERS.join(", ")}`);
     return;
   }
-  const servers = await serverList(ns, column, sortOrder);
+  const servers = await serverList({ ns, column, sortOrder, threads });
 
   servers
-    .filter((server) => server.hasRoot)
+    .filter((server) => showAll || server.hasRoot)
     .forEach(
       ({
+        fullGrowTime,
         growRate,
         hackLevel,
         hasRoot,
-        incomeRate,
+        hackRate,
         name,
+        nukable,
         security,
         serverMoney,
+        percentMoney,
       }) => {
+        const growTime = formatTime(new Date(fullGrowTime * 1000));
+
         ns.tprint(
           [
-            hasRoot ? "🟩" : "🟥",
-            formatNumber(hackLevel.toFixed(0)).padStart(5),
-            formatNumber(security.toFixed(0)).padStart(6),
-            `$${formatNumber(serverMoney.toFixed(0))}`.padStart(16),
-            `$${formatNumber(incomeRate.toFixed(0))}/sec`.padStart(14),
-            `$${formatNumber(growRate.toFixed(0))}/sec`.padStart(10),
+            hasRoot
+              ? "🟩"
+              : nukable && hackLevel <= ns.getHackingLevel()
+              ? "🟧"
+              : "🟥",
+            formatNumber(hackLevel.toFixed(0)).padStart(4),
+            formatNumber(security.toFixed(0)).padStart(5),
+            `$${formatNumber(serverMoney.toFixed(0))}`.padStart(15),
+            `$${formatNumber(hackRate.toFixed(0))}/sec`.padStart(13),
+            `$${formatNumber(growRate.toFixed(0))}/sec`.padStart(13),
+            `${(percentMoney * 100).toFixed(0)}%`,
+            growTime,
             name,
-          ].join(" ")
+          ].join("  ")
         );
       }
     );
@@ -57,12 +85,6 @@ const dive = (source: string, last: string, ns: BitBurner): string[] => {
     .concat([source]);
 };
 
-const formatNumber = (num: number | string) => {
-  var parts = num.toString().split(".");
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return parts.join(".");
-};
-
 const isValidSort = (sort: string): sort is Column => {
   if (!COLUMNS.includes(sort as Column)) {
     return false;
@@ -75,4 +97,18 @@ const isValidSortOrder = (order: string): order is SortOrder => {
     return false;
   }
   return true;
+};
+
+const formatTime = (date: Date) => {
+  const days = date.getUTCMonth() * 30 + (date.getUTCDate() - 1);
+  return [
+    days > 99 ? ">" : " ",
+    Math.min(days, 99).toString().padStart(2, " "),
+    "d ",
+    date.getUTCHours().toString().padStart(2, "0"),
+    ":",
+    date.getUTCMinutes().toString().padStart(2, "0"),
+    ":",
+    date.getUTCSeconds().toString().padStart(2, "0"),
+  ].join("");
 };

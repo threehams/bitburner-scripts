@@ -1,48 +1,62 @@
 import { BitBurner } from "../types/bitburner";
+import { buyServer, canBuyServer } from "./shared-buy-server";
+import { nukeAll } from "./shared-nuke-all";
 import { serverList } from "./shared-server-list";
+
+const SCRIPTS = {
+  hack: "single-hack.js",
+  grow: "single-grow.js",
+};
 
 export async function main(ns: BitBurner) {
   const verbose = ns.args.includes("-v");
   const once = ns.args.includes("-o");
-  const sources = ns.getPurchasedServers();
+  const experience = ns.args.includes("-e");
+  const home = ns.args.includes("-h");
 
   while (true) {
-    const hackServer = (await serverList(ns, "incomeRate", "desc"))[0];
-    const growServer = (await serverList(ns, "growRate", "desc"))[0];
-    const hackTime = (ns.getHackTime(hackServer.name) + 1) * 1000;
-    const growTime = (ns.getGrowTime(growServer.name) + 1) * 1000;
-    const script =
-      hackServer.incomeRate > growServer.growRate * 2
-        ? "single-hack.js"
-        : "single-grow.js";
+    nukeAll(ns);
+    const serverRam = 16;
+    while (canBuyServer(ns, serverRam)) {
+      buyServer(ns, serverRam);
+    }
+    const sources = home ? ["home"] : ns.getPurchasedServers();
 
-    const ram = ns.getScriptRam(script);
-    const sleepTime = script === "single-grow.js" ? growTime : hackTime;
-
-    const target =
-      script === "single-grow.js" ? growServer.name : hackServer.name;
-
-    const totalThreads = sources.reduce((sum, source) => {
-      return sum + getThreadCount(ns, source, ram);
-    }, 0);
-
-    if (verbose) {
-      ns.tprint(
-        `${
-          script === "single-grow.js" ? "growing" : "hacking"
-        } target: ${target} on ${totalThreads} threads, ETA: ${(
-          sleepTime / 1000
-        ).toFixed(0)}s`
-      );
+    const { action, target, runTime, ram } = await findBestTarget(
+      ns,
+      experience,
+      sources
+    );
+    const totalThreads = getTotalThreads(ns, sources, ram);
+    if (!totalThreads) {
+      await ns.sleep(1000);
+      continue;
     }
 
     for (const source of sources) {
       if (getThreadCount(ns, source, ram)) {
-        ns.exec(script, source, getThreadCount(ns, source, ram), target);
+        ns.exec(
+          SCRIPTS[action],
+          source,
+          getThreadCount(ns, source, ram),
+          target
+        );
       }
     }
 
-    await ns.sleep(sleepTime);
+    const message = `${
+      action === "grow" ? "growing" : "hacking"
+    } target: ${target} on ${totalThreads} threads, ETA: ${(
+      runTime / 1000
+    ).toFixed(0)}s`;
+    if (verbose) {
+      ns.tprint(message);
+    } else {
+      ns.print(message);
+    }
+
+    await ns.sleep(1000);
+
     if (once) {
       return;
     }
@@ -52,4 +66,68 @@ export async function main(ns: BitBurner) {
 const getThreadCount = (ns: BitBurner, server: string, ram: number) => {
   const [totalRam, usedRam] = ns.getServerRam(server);
   return Math.floor((totalRam - usedRam) / ram);
+};
+
+const getTotalThreads = (ns: BitBurner, sources: string[], ram: number) => {
+  return sources.reduce((sum, source) => {
+    return sum + getThreadCount(ns, source, ram);
+  }, 0);
+};
+
+type Target = {
+  action: "hack" | "grow";
+  target: string;
+  runTime: number;
+  ram: number;
+};
+const findBestTarget = async (
+  ns: BitBurner,
+  experience: boolean,
+  sources: string[]
+): Promise<Target> => {
+  const hackRam = ns.getScriptRam(SCRIPTS["hack"]);
+  const growRam = ns.getScriptRam(SCRIPTS["grow"]);
+
+  if (experience) {
+    const target = (
+      await serverList({
+        ns,
+        column: "hackLevel",
+        sortOrder: "asc",
+        threads: getTotalThreads(ns, sources, hackRam),
+      })
+    )[0].name;
+    return {
+      action: "hack",
+      target,
+      runTime: (ns.getHackTime(target) + 1) * 1000,
+      ram: hackRam,
+    };
+  } else {
+    const hackServer = (
+      await serverList({
+        ns,
+        column: "hackRate",
+        sortOrder: "desc",
+        threads: getTotalThreads(ns, sources, hackRam),
+      })
+    )[0];
+    const growServer = (
+      await serverList({
+        ns,
+        column: "growRate",
+        sortOrder: "desc",
+        threads: getTotalThreads(ns, sources, growRam),
+      })
+    )[0];
+    const hackTime = (ns.getHackTime(hackServer.name) + 1) * 1000;
+    const growTime = (ns.getGrowTime(growServer.name) + 1) * 1000;
+    const action = hackServer.hackRate > growServer.growRate ? "hack" : "grow";
+    return {
+      action,
+      target: action === "grow" ? growServer.name : hackServer.name,
+      runTime: action === "grow" ? growTime : hackTime,
+      ram: action === "grow" ? growRam : hackRam,
+    };
+  }
 };

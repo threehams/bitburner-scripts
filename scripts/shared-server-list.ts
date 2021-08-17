@@ -1,24 +1,33 @@
 import { BitBurner } from "../types/bitburner";
+import { canNuke } from "./shared-can-nuke";
 
 export const COLUMNS = [
   "hackLevel",
   "hackValue",
+  "hackRate",
   "hasRoot",
-  "incomeRate",
   "name",
+  "nukable",
   "security",
   "serverMoney",
   "growRate",
+  "fullGrowTime",
 ] as const;
 export type Column = typeof COLUMNS[number];
 export const SORT_ORDERS = ["asc", "desc"] as const;
 export type SortOrder = typeof SORT_ORDERS[number];
 
-export const serverList = async (
-  ns: BitBurner,
-  column: Column = "hackLevel",
-  sortOrder: SortOrder = "asc"
-) => {
+export const serverList = async ({
+  ns,
+  column = "hackLevel",
+  sortOrder = "asc",
+  threads = 1,
+}: {
+  ns: BitBurner;
+  column?: Column;
+  sortOrder?: SortOrder;
+  threads?: number;
+}) => {
   const owned = ["home"].concat(ns.getPurchasedServers());
   ns.growthAnalyze; // force this to be calculated for RAM usage
   ns.getHackTime;
@@ -36,27 +45,43 @@ export const serverList = async (
     .filter((server) => !owned.includes(server))
     .map((server) => {
       const hasRoot = ns.hasRootAccess(server);
+      const nukable = canNuke(ns, server);
       const serverMoney = ns.getServerMoneyAvailable(server);
       const maxServerMoney = ns.getServerMaxMoney(server);
-      const hackValue =
-        (ns.hackAnalyzePercent(server) / 100) *
-        serverMoney *
-        ns.hackChance(server);
-      const growCount = ns.growthAnalyze(server, 2);
-      const growTime = ns.getGrowTime(server);
-      const growRate = hasRoot
-        ? Math.min(serverMoney, maxServerMoney - serverMoney) /
-          (growCount * growTime)
+      const hackValue = hasRoot
+        ? (ns.hackAnalyzePercent(server) / 100) *
+          serverMoney *
+          ns.hackChance(server) *
+          threads
         : 0;
+      const hackRate = hackValue / ns.getHackTime(server);
+      const growCount = ns.growthAnalyze(server, 2);
+      const growValue = hasRoot
+        ? Math.min(serverMoney * threads, maxServerMoney - serverMoney)
+        : 0;
+      const growTime = ns.getGrowTime(server);
+      const growRate = growValue / (Math.max(growCount, 1) * growTime);
+      const fullGrowTime =
+        serverMoney > 0
+          ? (ns.growthAnalyze(server, maxServerMoney / serverMoney) *
+              ns.getGrowTime(server)) /
+            threads
+          : 0;
+      const percentMoney =
+        ns.getServerMoneyAvailable(server) / ns.getServerMaxMoney(server) || 0;
+
       return {
+        fullGrowTime,
+        growRate,
+        hackLevel: ns.getServerRequiredHackingLevel(server),
+        hackRate,
+        hackValue,
         hasRoot,
         name: server,
-        hackLevel: ns.getServerRequiredHackingLevel(server),
+        nukable,
+        percentMoney,
         security: ns.getServerSecurityLevel(server),
         serverMoney,
-        hackValue,
-        incomeRate: hackValue / ns.getHackTime(server),
-        growRate,
       };
     })
     .sort((a, b) => {

@@ -9,7 +9,7 @@ export async function main(ns: BitBurner) {
   while (true) {
     const target =
       ns.args[0] ??
-      (await serverList(ns, "growRate", "desc")).filter(
+      (await serverList({ ns, column: "growRate", sortOrder: "desc" })).filter(
         (server) => server.hasRoot
       )[0].name;
     const hackTime = (ns.getGrowTime(target) + 1) * 1000;

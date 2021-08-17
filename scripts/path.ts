@@ -1,9 +1,19 @@
 import { BitBurner } from "../types/bitburner";
 
 export async function main(ns: BitBurner) {
-  const [source, target] = ns.args;
-  if (!source || !target) {
+  const [server1, server2] = ns.args;
+  if (!server1) {
     ns.tprint("Usage: run path.js [source] [target]");
+    return;
+  }
+
+  let source, target;
+  if (!server2) {
+    source = ns.getHostname();
+    target = server1;
+  } else {
+    source = server1;
+    target = server2;
   }
 
   ns.tprint(find(source, undefined, target, ns));
