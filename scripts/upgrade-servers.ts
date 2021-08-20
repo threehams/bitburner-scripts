@@ -1,11 +1,8 @@
 import { BitBurner } from "../types/bitburner";
-import { buyServer, canBuyServer } from "./shared-buy-server";
+import { buyServer } from "./shared-buy-server";
 import { SERVER_RAM } from "./shared-settings";
 
-/**
- * @param ns {BitBurner}
- */
-export async function main(ns) {
+export async function main(ns: BitBurner) {
   ns.getPurchasedServers().forEach((server) => {
     const [maxRam] = ns.getServerRam(server);
     if (

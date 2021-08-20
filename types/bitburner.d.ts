@@ -4683,7 +4683,7 @@ export interface BitBurner extends TIX, Singularity {
 
   flags<TConfig extends [key: string, value: unknown]>(
     config: []
-  ): { [Key in TConfig] };
+  ): FromEntries<TConfig>;
 
   /**
    * Complete open source JavaScript sprintf implementation
