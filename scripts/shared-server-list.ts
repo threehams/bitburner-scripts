@@ -49,10 +49,13 @@ export const serverList = async ({
       const serverMoney = ns.getServerMoneyAvailable(server);
       const maxServerMoney = ns.getServerMaxMoney(server);
       const hackValue = hasRoot
-        ? (ns.hackAnalyzePercent(server) / 100) *
-          serverMoney *
-          ns.hackChance(server) *
-          threads
+        ? Math.min(
+            serverMoney,
+            (ns.hackAnalyzePercent(server) / 100) *
+              serverMoney *
+              ns.hackChance(server) *
+              threads
+          )
         : 0;
       const hackRate = hackValue / ns.getHackTime(server);
       const growCount = ns.growthAnalyze(server, 2);

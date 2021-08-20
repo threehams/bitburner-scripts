@@ -855,6 +855,15 @@ export type GangOtherInfo = {
   [key in GangName]: GangOtherInfoObject[];
 };
 
+type UnionToIntersection<T> = (T extends T ? (p: T) => void : never) extends (
+  p: infer U
+) => void
+  ? U
+  : never;
+type FromEntries<T extends readonly [PropertyKey, any]> = T extends T
+  ? Record<T[0], T[1]>
+  : never;
+
 export type GangEquipment =
   | "Baseball Bat"
   | "Katana"
@@ -4671,6 +4680,10 @@ export interface BitBurner extends TIX, Singularity {
    * @returns Formated text.
    */
   sprintf(format: string, ...args: string[]): string;
+
+  flags<TConfig extends [key: string, value: unknown]>(
+    config: []
+  ): { [Key in TConfig] };
 
   /**
    * Complete open source JavaScript sprintf implementation

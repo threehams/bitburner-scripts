@@ -1,5 +1,5 @@
 import { BitBurner } from "../types/bitburner";
-import { formatNumber } from "./formatNumber";
+import { formatNumber } from "./shared-format-number";
 import { findArg } from "./shared-args";
 import {
   Column,
@@ -8,6 +8,7 @@ import {
   SortOrder,
   SORT_ORDERS,
 } from "./shared-server-list";
+import { makeTable } from "./shared-make-table";
 
 const sortColumns: { [key: string]: Column | undefined } = {
   l: "hackLevel",
@@ -35,9 +36,9 @@ export async function main(ns: BitBurner) {
   }
   const servers = await serverList({ ns, column, sortOrder, threads });
 
-  servers
+  const table = servers
     .filter((server) => showAll || server.hasRoot)
-    .forEach(
+    .map(
       ({
         fullGrowTime,
         growRate,
@@ -52,25 +53,25 @@ export async function main(ns: BitBurner) {
       }) => {
         const growTime = formatTime(new Date(fullGrowTime * 1000));
 
-        ns.tprint(
-          [
-            hasRoot
-              ? "🟩"
-              : nukable && hackLevel <= ns.getHackingLevel()
-              ? "🟧"
-              : "🟥",
-            formatNumber(hackLevel.toFixed(0)).padStart(4),
-            formatNumber(security.toFixed(0)).padStart(5),
-            `$${formatNumber(serverMoney.toFixed(0))}`.padStart(15),
-            `$${formatNumber(hackRate.toFixed(0))}/sec`.padStart(13),
-            `$${formatNumber(growRate.toFixed(0))}/sec`.padStart(13),
-            `${(percentMoney * 100).toFixed(0)}%`,
-            growTime,
-            name,
-          ].join("  ")
-        );
+        return [
+          hasRoot
+            ? "🟩"
+            : nukable && hackLevel <= ns.getHackingLevel()
+            ? "🟧"
+            : "🟥",
+          formatNumber(hackLevel.toFixed(0)),
+          formatNumber(security.toFixed(0)),
+          `$${formatNumber(serverMoney.toFixed(0))}`,
+          `$${formatNumber(hackRate.toFixed(0))}/sec`,
+          `$${formatNumber(growRate.toFixed(0))}/sec`,
+          `${(percentMoney * 100).toFixed(0)}%`,
+          growTime,
+          name,
+        ];
       }
     );
+
+  makeTable(table, ns).forEach((row) => ns.tprint(row));
 }
 
 const dive = (source: string, last: string, ns: BitBurner): string[] => {

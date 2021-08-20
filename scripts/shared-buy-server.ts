@@ -1,5 +1,5 @@
 import { BitBurner } from "../types/bitburner";
-import { formatNumber } from "./formatNumber";
+import { formatNumber } from "./shared-format-number";
 import { findArg } from "./shared-args";
 
 export const buyServer = (ns: BitBurner, ram: number) => {
