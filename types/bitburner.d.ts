@@ -1,4 +1,4 @@
-export type Message = string | number | string[] | number[];
+export type Message = unknown;
 export type Host = string;
 export type Script = string;
 export type StockSymbol =
@@ -309,7 +309,7 @@ export interface CrimeStats {
   /** How much money is given */
   money: number;
   /** Name of crime */
-  name: number;
+  name: string;
   /** Milliseconds it takes to attempt the crime */
   time: number;
   /** Description of the crime activity */
@@ -863,6 +863,9 @@ type UnionToIntersection<T> = (T extends T ? (p: T) => void : never) extends (
 type FromEntries<T extends readonly [PropertyKey, any]> = T extends T
   ? Record<T[0], T[1]>
   : never;
+type Flatten<T> = {} & {
+  [P in keyof T]: T[P];
+};
 
 export type GangEquipment =
   | "Baseball Bat"
@@ -4681,9 +4684,12 @@ export interface BitBurner extends TIX, Singularity {
    */
   sprintf(format: string, ...args: string[]): string;
 
-  flags<TConfig extends [key: string, value: unknown]>(
-    config: []
-  ): FromEntries<TConfig>;
+  flags<
+    Key extends string,
+    TConfig extends [readonly [Key, any]] | Array<readonly [Key, any]>
+  >(
+    config: TConfig
+  ): Flatten<UnionToIntersection<FromEntries<TConfig[number]>>>;
 
   /**
    * Complete open source JavaScript sprintf implementation

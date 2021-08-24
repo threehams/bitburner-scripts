@@ -3,6 +3,7 @@ import { enterCommand } from "./shared-enter-command";
 import { canNuke } from "./shared-can-nuke";
 import { findPath } from "./shared-find-path";
 import { nukeAll } from "./shared-nuke-all";
+import { waitFor } from "./shared-wait-for";
 
 export const doc = eval("doc" + "ument");
 const factionServers = [
@@ -48,25 +49,6 @@ export async function main(ns: BitBurner) {
     }
   }
 }
-
-const waitFor = async <T extends unknown>(
-  ns: BitBurner,
-  callback: () => T | undefined,
-  timeout: number = 60000
-): Promise<T> => {
-  let timer = 0;
-
-  while (timer < timeout) {
-    const result = callback();
-    if (result !== undefined) {
-      return result;
-    }
-    // silly but works for now
-    timer += 500;
-    await ns.sleep(500);
-  }
-  throw new Error(`waitFor failed after ${timeout}s`);
-};
 
 const canHack = (ns: BitBurner, server: string) => {
   return ns.getServerRequiredHackingLevel(server) <= ns.getHackingLevel();

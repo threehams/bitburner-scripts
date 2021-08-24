@@ -3,7 +3,7 @@
     "allowJs": false,
     "target": "ES2019",
     "outDir": "./dist",
-    "lib": ["DOM", "ES2019"],
+    "lib": ["DOM", "es2021"],
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true

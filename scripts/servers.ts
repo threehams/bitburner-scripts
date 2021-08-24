@@ -1,13 +1,6 @@
 import { BitBurner } from "../types/bitburner";
 import { formatNumber } from "./shared-format-number";
-import { findArg } from "./shared-args";
-import {
-  Column,
-  COLUMNS,
-  serverList,
-  SortOrder,
-  SORT_ORDERS,
-} from "./shared-server-list";
+import { Column, COLUMNS, serverList, SORT_ORDERS } from "./shared-server-list";
 import { makeTable } from "./shared-make-table";
 
 const sortColumns: { [key: string]: Column | undefined } = {
@@ -20,15 +13,20 @@ const sortColumns: { [key: string]: Column | undefined } = {
 };
 
 export async function main(ns: BitBurner) {
-  const threads = findArg(ns.args, { key: "t", defaultValue: 1 });
-  const sortOrder = ns.args.includes("-r") ? "desc" : "asc";
-  const column =
-    sortColumns[
-      ns.args.find((flag) => flag.startsWith("-s"))?.replace("-s", "") ?? "l"
-    ] ?? "hackLevel";
-  const showAll = findArg(ns.args, { key: "a", defaultValue: false });
+  const {
+    h: threads,
+    s: column,
+    a: showAll,
+    r: reverseSort,
+  } = ns.flags([
+    ["h", 1],
+    ["s", "hackLevel"],
+    ["a", false],
+    ["r", false],
+  ]);
+  const sortOrder = reverseSort ? "desc" : "asc";
 
-  if (!isValidSort(column) || !isValidSortOrder(sortOrder)) {
+  if (!isValidSort(column)) {
     ns.tprint(`Usage: run walk.js --sort [column] [sort-order]`);
     ns.tprint(`Available columns: ${COLUMNS.join(", ")}`);
     ns.tprint(`Available sort orders: ${SORT_ORDERS.join(", ")}`);
@@ -50,6 +48,7 @@ export async function main(ns: BitBurner) {
         security,
         serverMoney,
         percentMoney,
+        minSecurity,
       }) => {
         const growTime = formatTime(new Date(fullGrowTime * 1000));
 
@@ -60,7 +59,9 @@ export async function main(ns: BitBurner) {
             ? "🟧"
             : "🟥",
           formatNumber(hackLevel.toFixed(0)),
-          formatNumber(security.toFixed(0)),
+          `${formatNumber(security.toFixed(0))}/${formatNumber(
+            minSecurity.toFixed(0)
+          )}`,
           `$${formatNumber(serverMoney.toFixed(0))}`,
           `$${formatNumber(hackRate.toFixed(0))}/sec`,
           `$${formatNumber(growRate.toFixed(0))}/sec`,
@@ -71,7 +72,21 @@ export async function main(ns: BitBurner) {
       }
     );
 
-  makeTable(table, ns).forEach((row) => ns.tprint(row));
+  makeTable(
+    [
+      [
+        "",
+        "hack",
+        "sec/min",
+        "money",
+        "money/sec",
+        "grow/sec",
+        "grow%",
+        "to max money",
+        "",
+      ],
+    ].concat(table)
+  ).forEach((row) => ns.tprint(row));
 }
 
 const dive = (source: string, last: string, ns: BitBurner): string[] => {
@@ -88,13 +103,6 @@ const dive = (source: string, last: string, ns: BitBurner): string[] => {
 
 const isValidSort = (sort: string): sort is Column => {
   if (!COLUMNS.includes(sort as Column)) {
-    return false;
-  }
-  return true;
-};
-
-const isValidSortOrder = (order: string): order is SortOrder => {
-  if (!SORT_ORDERS.includes(order as SortOrder)) {
     return false;
   }
   return true;

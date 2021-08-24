@@ -10,6 +10,7 @@ export const COLUMNS = [
   "nukable",
   "security",
   "serverMoney",
+  "maxServerMoney",
   "growRate",
   "fullGrowTime",
 ] as const;
@@ -84,7 +85,9 @@ export const serverList = async ({
         nukable,
         percentMoney,
         security: ns.getServerSecurityLevel(server),
+        minSecurity: ns.getServerMinSecurityLevel(server),
         serverMoney,
+        maxServerMoney,
       };
     })
     .sort((a, b) => {
