@@ -1,4 +1,5 @@
 import { BitBurner } from "../types/bitburner";
+import { allServers } from "./shared-all-servers";
 import { buyServer, canBuyServer } from "./shared-buy-server";
 import { nukeAll } from "./shared-nuke-all";
 import { serverList } from "./shared-server-list";
@@ -19,17 +20,29 @@ const SCRIPT_TYPES: { [key: string]: Action | undefined } = {
 };
 
 type Processes = {
-  [target: string]:
-    | {
-        [action in Action]?: number;
-      }
-    | undefined;
+  [target: string]: {
+    [action in Action]?: number;
+  };
 };
 
 export async function main(ns: BitBurner) {
-  const verbose = ns.args.includes("-v");
-  const once = ns.args.includes("-o");
-  const home = ns.args.includes("-h");
+  const {
+    h: home,
+    o: once,
+    v: verbose,
+    g: grindExperience,
+    w: weakenOnly,
+    target: singleTarget,
+    hack: hackOnly,
+  } = ns.flags([
+    ["v", false],
+    ["o", false],
+    ["h", false],
+    ["g", false],
+    ["target", ""],
+    ["w", false],
+    ["hack", false],
+  ]);
 
   while (true) {
     nukeAll(ns);
@@ -43,7 +56,9 @@ export async function main(ns: BitBurner) {
       upgradeServers(ns, ramUpgrade);
       totalThreadsCache = undefined;
     }
-    const sources = (home ? ["home"] : []).concat(ns.getPurchasedServers());
+    const sources = (home ? ["home"] : []).concat(
+      allServers(ns).filter((server) => ns.hasRootAccess(server))
+    );
     const processes: Processes = {};
     for (const source of sources) {
       for (const info of ns.ps(source)) {
@@ -61,28 +76,47 @@ export async function main(ns: BitBurner) {
         processes[target]![action]! += info.threads;
       }
     }
+    verbose && ns.tprint("current threads: ");
+    verbose && ns.tprint(processes);
 
-    const targets = isLowLevel(ns)
-      ? [await findBestTarget({ ns, sources })]
-      : (
-          await serverList({
-            ns,
-            column: "maxServerMoney",
-            sortOrder: "desc",
-          })
-        ).filter((target) => target.hasRoot);
+    let targets;
+    if (singleTarget) {
+      const servers = await serverList({ ns });
+      const target = servers.find((server) => server.name === singleTarget);
+      if (!target) {
+        ns.tprint(`No server found with name: ${target}`);
+        return;
+      }
+      targets = [target];
+      // } else if (isLowLevel(ns, sources)) {
+      //   targets = [await findBestTarget({ ns, sources })];
+    } else {
+      targets = (
+        await serverList({
+          ns,
+          column: "maxServerMoney",
+          sortOrder: "desc",
+        })
+      ).filter((target) => target.hasRoot);
+    }
 
     const fullSources = new Set<string>();
     for (const target of targets) {
+      // verbose && ns.tprint("target: ", target.name);
       for (const source of sources) {
         if (fullSources.has(source)) {
+          // verbose && ns.tprint(source, " is full, sorry");
           continue;
         }
-        const { action, threads: maxThreads } = getBestAction(
+        const { action, threads: maxThreads } = getBestAction({
           ns,
-          target.name,
-          sources
-        );
+          target: target.name,
+          sources,
+          verbose,
+          singleTarget: !!singleTarget,
+          weakenOnly,
+          hackOnly,
+        });
         if (!action || !maxThreads) {
           break;
         }
@@ -92,24 +126,28 @@ export async function main(ns: BitBurner) {
           weaken: 0,
         };
         const currentThreads = processes[target.name]![action]!;
+        verbose &&
+          ns.tprint(`already running ${action} with ${currentThreads} threads`);
         if (maxThreads === currentThreads) {
           break;
         }
         const ram = ns.getScriptRam(SCRIPTS[action]);
+        const availableThreads = getThreadCount(ns, source, ram);
+        if (!availableThreads) {
+          fullSources.add(source);
+          continue;
+        }
+
         const threads = Math.min(
-          getThreadCount(ns, source, ram),
+          availableThreads,
           Math.max(maxThreads - currentThreads, 0)
         );
 
-        if (!threads) {
-          fullSources.add(source);
-        }
         if (threads) {
-          if (verbose) {
+          verbose &&
             ns.tprint(
               `running ${SCRIPTS[action]} on ${source} with ${threads} threads against ${target.name}`
             );
-          }
           ns.exec(SCRIPTS[action], source, threads, target.name);
           processes[target.name]![action]! += threads;
         }
@@ -119,21 +157,23 @@ export async function main(ns: BitBurner) {
       }
     }
 
-    // for (const source of sources) {
-    //   const target = "foodnstuff";
-    //   const action = "hack";
-    //   const ram = ns.getScriptRam(SCRIPTS[action]);
-    //   const threads = getThreadCount(ns, source, ram);
-    //   if (!threads) {
-    //     continue;
-    //   }
-    //   if (verbose) {
-    //     ns.tprint(
-    //       `grinding experience: running ${SCRIPTS[action]} on ${source} with ${threads} threads against ${target}`
-    //     );
-    //   }
-    //   ns.exec(SCRIPTS[action], source, threads, target);
-    // }
+    if (grindExperience) {
+      for (const source of sources) {
+        const target = "foodnstuff";
+        const action = "hack";
+        const ram = ns.getScriptRam(SCRIPTS[action]);
+        const threads = getThreadCount(ns, source, ram);
+        if (!threads) {
+          continue;
+        }
+        if (verbose) {
+          ns.tprint(
+            `grinding experience: running ${SCRIPTS[action]} on ${source} with ${threads} threads against ${target}`
+          );
+        }
+        ns.exec(SCRIPTS[action], source, threads, target);
+      }
+    }
 
     await ns.sleep(1000);
 
@@ -176,33 +216,62 @@ const getTotalThreads = (ns: BitBurner, sources: string[], ram: number) => {
   return totalThreads;
 };
 
-const getBestAction = (
-  ns: BitBurner,
-  target: string,
-  sources: string[]
-): { action?: Action; threads?: number } => {
+const getBestAction = ({
+  ns,
+  target,
+  sources,
+  verbose,
+  singleTarget,
+  weakenOnly,
+  hackOnly,
+}: {
+  ns: BitBurner;
+  target: string;
+  sources: string[];
+  verbose: boolean;
+  singleTarget: boolean;
+  weakenOnly: boolean;
+  hackOnly: boolean;
+}): { action?: Action; threads?: number } => {
+  verbose && ns.tprint(`\ndetermining best action for ${target}`);
   const totalThreads = getTotalThreads(ns, sources, 1.7);
   if (ns.getServerMaxMoney(target) === 0) {
+    verbose && ns.tprint(`server max money is 0`);
     return {};
-  }
-  if (isLowLevel(ns)) {
-    return { action: "hack", threads: 5000 };
   }
   const securityLevel =
     ns.getServerSecurityLevel(target) - ns.getServerMinSecurityLevel(target);
 
-  if (securityLevel > 1) {
+  if (securityLevel > 10 || (weakenOnly && securityLevel > 1 && !hackOnly)) {
     const threads = Math.ceil(securityLevel / 0.05);
-    if (
-      threads > totalThreads ||
-      (ns.getWeakenTime(target) > 10 * 60 && !isHighLevel(ns))
-    ) {
+    const highLevel = isHighLevel(ns, sources);
+    const tooSlow =
+      !isSuperLevel(ns, sources) &&
+      ns.getWeakenTime(target) > (highLevel || weakenOnly ? 20 : 10) * 60;
+    if ((threads > totalThreads || tooSlow) && !singleTarget) {
+      verbose &&
+        threads > totalThreads &&
+        ns.tprint(
+          `required weaken threads ${threads} < total threads ${totalThreads}`
+        );
+      verbose &&
+        tooSlow &&
+        ns.tprint(
+          `required weaken time of ${ns
+            .getWeakenTime(target)
+            .toFixed(0)}s is too slow`
+        );
       return {};
     }
+    verbose && ns.tprint(`weakening with ${threads} threads`);
     return { action: "weaken", threads };
-  } else if (
-    ns.getServerMoneyAvailable(target) / ns.getServerMaxMoney(target) <
-    0.96
+  }
+  if (weakenOnly) {
+    return {};
+  }
+  if (
+    ns.getServerMoneyAvailable(target) / ns.getServerMaxMoney(target) < 0.96 &&
+    !hackOnly
   ) {
     const threads = Math.ceil(
       ns.growthAnalyze(
@@ -210,15 +279,25 @@ const getBestAction = (
         ns.getServerMaxMoney(target) / (ns.getServerMoneyAvailable(target) || 1)
       )
     );
-    if (threads > totalThreads) {
+    if (
+      threads > totalThreads * 3 &&
+      !isHighLevel(ns, sources) &&
+      !singleTarget
+    ) {
+      verbose &&
+        ns.tprint(
+          `required grow threads ${threads} < total threads ${totalThreads}`
+        );
       return {};
     }
+    verbose && ns.tprint(`growing with ${threads} threads`);
     return {
       action: "grow",
       threads,
     };
   } else {
-    const threads = Math.ceil(90 / ns.hackAnalyzePercent(target));
+    const threads = Math.ceil(50 / ns.hackAnalyzePercent(target));
+    verbose && ns.tprint(`hacking with ${threads} threads`);
     return {
       action: "hack",
       threads,
@@ -234,6 +313,9 @@ const serverUpgradeRam = (ns: BitBurner) => {
       return ns.getServerRam(a) < ns.getServerRam(b) ? 1 : -1;
     });
 
+  if (!servers.length) {
+    return undefined;
+  }
   const [lowestRam] = ns.getServerRam(servers[0]);
   const upgradeCost = ns.getPurchasedServerCost(lowestRam * 4) * 13;
 
@@ -243,27 +325,14 @@ const serverUpgradeRam = (ns: BitBurner) => {
   return undefined;
 };
 
-const findBestTarget = async ({
-  ns,
-  sources,
-}: {
-  ns: BitBurner;
-  sources: string[];
-}) => {
-  return (
-    await serverList({
-      ns,
-      column: "hackRate",
-      sortOrder: "desc",
-      threads: getAvailableThreads(ns, sources, ns.getScriptRam(SCRIPTS.hack)),
-    })
-  )[0];
+const isLowLevel = (ns: BitBurner, sources: string[]) => {
+  return getTotalThreads(ns, sources, 1.7) < 2500;
 };
 
-const isLowLevel = (ns: BitBurner) => {
-  return getTotalThreads(ns, ns.getPurchasedServers(), 1.7) < 4700;
+const isHighLevel = (ns: BitBurner, sources: string[]) => {
+  return getTotalThreads(ns, sources, 1.7) > 10000;
 };
 
-const isHighLevel = (ns: BitBurner) => {
-  return getTotalThreads(ns, ns.getPurchasedServers(), 1.7) > 10000;
+const isSuperLevel = (ns: BitBurner, sources: string[]) => {
+  return getTotalThreads(ns, sources, 1.7) > 500000;
 };

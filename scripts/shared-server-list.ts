@@ -88,6 +88,12 @@ export const serverList = async ({
         minSecurity: ns.getServerMinSecurityLevel(server),
         serverMoney,
         maxServerMoney,
+        threadsToHack: threadsToHack(ns, server),
+        timeToHack: ns.getHackTime(server),
+        threadsToGrow: threadsToGrow(ns, server),
+        timeToGrow: ns.getGrowTime(server),
+        threadsToWeaken: threadsToWeaken(ns, server),
+        timeToWeaken: ns.getWeakenTime(server),
       };
     })
     .sort((a, b) => {
@@ -106,4 +112,33 @@ const dive = (source: string, last: string, ns: BitBurner): string[] => {
       return dive(server, source, ns);
     })
     .concat([source]);
+};
+
+const threadsToWeaken = (ns: BitBurner, target: string) => {
+  if (ns.getServerMaxMoney(target) === 0) {
+    return 0;
+  }
+  const securityLevel =
+    ns.getServerSecurityLevel(target) - ns.getServerMinSecurityLevel(target);
+  return Math.ceil(securityLevel / 0.05);
+};
+
+const threadsToHack = (ns: BitBurner, target: string) => {
+  if (ns.getServerMaxMoney(target) === 0) {
+    return 0;
+  }
+  return Math.ceil(90 / ns.hackAnalyzePercent(target));
+};
+
+const threadsToGrow = (ns: BitBurner, target: string) => {
+  if (ns.getServerMaxMoney(target) === 0) {
+    return 0;
+  }
+
+  return Math.ceil(
+    ns.growthAnalyze(
+      target,
+      ns.getServerMaxMoney(target) / (ns.getServerMoneyAvailable(target) || 1)
+    )
+  );
 };

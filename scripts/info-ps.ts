@@ -1,4 +1,5 @@
 import { BitBurner } from "../types/bitburner";
+import { allServers } from "./shared-all-servers";
 import { makeTable } from "./shared-make-table";
 
 type Action = "hack" | "grow" | "weaken";
@@ -17,7 +18,9 @@ type Processes = {
 };
 
 export const main = async (ns: BitBurner) => {
-  const sources = ["home"].concat(ns.getPurchasedServers());
+  const sources = ["home"].concat(
+    allServers(ns).filter((server) => ns.hasRootAccess(server))
+  );
   const processes: Processes = {};
   for (const source of sources) {
     for (const info of ns.ps(source)) {
@@ -49,7 +52,10 @@ export const main = async (ns: BitBurner) => {
       };
     })
     .sort((a, b) => {
-      return a.total < b.total ? 1 : -1;
+      return ns.getServerRequiredHackingLevel(a.name) <
+        ns.getServerRequiredHackingLevel(b.name)
+        ? -1
+        : 1;
     })
     .map(({ name, grow, hack, total, weaken }) => {
       return [
@@ -60,9 +66,35 @@ export const main = async (ns: BitBurner) => {
         name,
       ];
     });
+
+  ns.tprint("total threads available: ", getTotalThreads(ns, sources));
   makeTable(
     [["hack", "grow", "weaken", "total", "name"]].concat(table)
   ).forEach((row) => {
     ns.tprint(row);
   });
+};
+
+const getTotalThreads = (
+  ns: BitBurner,
+  sources: string[],
+  ram: number = 1.7
+) => {
+  return sources.reduce((sum, source) => {
+    return sum + getThreadCount(ns, source, ram, true);
+  }, 0);
+};
+
+const getThreadCount = (
+  ns: BitBurner,
+  server: string,
+  ram: number,
+  max?: boolean
+) => {
+  const [totalRam, usedRam] = ns.getServerRam(server);
+  const threads = Math.floor(
+    (totalRam - (max ? 0 : usedRam) - (server === "home" ? 0 : 0)) / ram
+  );
+  // it happens
+  return Math.max(0, threads);
 };

@@ -10,8 +10,8 @@ export const nukeAll = async (ns: BitBurner) => {
     return hackingLevel >= server.hackLevel;
   });
 
-  hackable.forEach((server) => {
-    hack(server.name, ns);
+  hackable.forEach(async (server) => {
+    await hack(server.name, ns);
   });
 };
 
@@ -28,6 +28,7 @@ const hack = async (server: string, ns: BitBurner) => {
     ns.fileExists("SQLInject.exe", "home") && ns.sqlinject(server);
 
     ns.nuke(server);
+    ns.scp(["single-hack.js", "single-grow.js", "single-weaken.js"], server);
     ns.tprint(`hacked: ${server}`);
   }
 };

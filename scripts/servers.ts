@@ -49,6 +49,12 @@ export async function main(ns: BitBurner) {
         serverMoney,
         percentMoney,
         minSecurity,
+        threadsToGrow,
+        threadsToHack,
+        threadsToWeaken,
+        timeToGrow,
+        timeToHack,
+        timeToWeaken,
       }) => {
         const growTime = formatTime(new Date(fullGrowTime * 1000));
 
@@ -63,10 +69,15 @@ export async function main(ns: BitBurner) {
             minSecurity.toFixed(0)
           )}`,
           `$${formatNumber(serverMoney.toFixed(0))}`,
-          `$${formatNumber(hackRate.toFixed(0))}/sec`,
-          `$${formatNumber(growRate.toFixed(0))}/sec`,
+          // `$${formatNumber(hackRate.toFixed(0))}/sec`,
+          // `$${formatNumber(growRate.toFixed(0))}/sec`,
           `${(percentMoney * 100).toFixed(0)}%`,
-          growTime,
+          formatTime(new Date(timeToHack * 1000)),
+          formatTime(new Date(timeToGrow * 1000)),
+          formatTime(new Date(timeToWeaken * 1000)),
+          formatNumber(threadsToHack.toFixed(0)),
+          formatNumber(threadsToGrow.toFixed(0)),
+          formatNumber(threadsToWeaken.toFixed(0)),
           name,
         ];
       }
@@ -79,10 +90,15 @@ export async function main(ns: BitBurner) {
         "hack",
         "sec/min",
         "money",
-        "money/sec",
-        "grow/sec",
+        // "money/sec",
+        // "grow/sec",
         "grow%",
-        "to max money",
+        "hackt",
+        "growt",
+        "weakent",
+        "hackth",
+        "growth",
+        "weakenth",
         "",
       ],
     ].concat(table)
@@ -109,11 +125,11 @@ const isValidSort = (sort: string): sort is Column => {
 };
 
 const formatTime = (date: Date) => {
-  const days = date.getUTCMonth() * 30 + (date.getUTCDate() - 1);
+  // const days = date.getUTCMonth() * 30 + (date.getUTCDate() - 1);
   return [
-    days > 99 ? ">" : " ",
-    Math.min(days, 99).toString().padStart(2, " "),
-    "d ",
+    // days > 99 ? ">" : " ",
+    // Math.min(days, 99).toString().padStart(2, " "),
+    // "d ",
     date.getUTCHours().toString().padStart(2, "0"),
     ":",
     date.getUTCMinutes().toString().padStart(2, "0"),
