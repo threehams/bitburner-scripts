@@ -1,12 +1,5 @@
 import { BitBurner } from "../types/bitburner";
-
-const range = (count: number) => Array.from(Array(count).keys());
-
-const LEVEL_VALUE = 1.649;
-// 0.057
-1.706;
-// 0.122
-1.828;
+import { range } from "./shared-range";
 
 export async function main(ns: BitBurner) {
   const purchaseCost = ns.hacknet.getPurchaseNodeCost();

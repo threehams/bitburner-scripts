@@ -1,48 +1,92 @@
 import { BitBurner } from "../types/bitburner";
-import {
-  Column,
-  COLUMNS,
-  serverList,
-  SortOrder,
-  SORT_ORDERS,
-} from "./shared-server-list";
+import { formatNumber } from "./shared-format-number";
+import { Column, COLUMNS, serverList, SORT_ORDERS } from "./shared-server-list";
+import { makeTable } from "./shared-make-table";
+
+const sortColumns: { [key: string]: Column | undefined } = {
+  l: "hackLevel",
+  r: "hackRate",
+  v: "hackValue",
+  g: "growRate",
+  m: "serverMoney",
+  t: "fullGrowTime",
+};
 
 export async function main(ns: BitBurner) {
-  const [, column = "hackLevel", sortOrder = "asc"] = ns.args;
+  const {
+    h: threads,
+    s: column,
+    a: showAll,
+    r: reverseSort,
+  } = ns.flags([
+    ["h", 1],
+    ["s", "hackLevel"],
+    ["a", false],
+    ["r", false],
+  ]);
+  const sortOrder = reverseSort ? "desc" : "asc";
 
-  if (!isValidSort(column) || !isValidSortOrder(sortOrder)) {
+  if (!isValidSort(column)) {
     ns.tprint(`Usage: run walk.js --sort [column] [sort-order]`);
     ns.tprint(`Available columns: ${COLUMNS.join(", ")}`);
     ns.tprint(`Available sort orders: ${SORT_ORDERS.join(", ")}`);
     return;
   }
-  const servers = await serverList(ns, column, sortOrder);
+  const servers = await serverList({ ns, column, sortOrder, threads });
 
-  servers
-    .filter((server) => server.hasRoot)
-    .forEach(
+  const table = servers
+    .filter((server) => showAll || server.hasRoot)
+    .map(
       ({
+        fullGrowTime,
         growRate,
         hackLevel,
         hasRoot,
-        incomeRate,
+        hackRate,
         name,
+        nukable,
         security,
         serverMoney,
+        percentMoney,
+        minSecurity,
       }) => {
-        ns.tprint(
-          [
-            hasRoot ? "🟩" : "🟥",
-            formatNumber(hackLevel.toFixed(0)).padStart(5),
-            formatNumber(security.toFixed(0)).padStart(6),
-            `$${formatNumber(serverMoney.toFixed(0))}`.padStart(16),
-            `$${formatNumber(incomeRate.toFixed(0))}/sec`.padStart(14),
-            `$${formatNumber(growRate.toFixed(0))}/sec`.padStart(10),
-            name,
-          ].join(" ")
-        );
+        const growTime = formatTime(new Date(fullGrowTime * 1000));
+
+        return [
+          hasRoot
+            ? "🟩"
+            : nukable && hackLevel <= ns.getHackingLevel()
+            ? "🟧"
+            : "🟥",
+          formatNumber(hackLevel.toFixed(0)),
+          `${formatNumber(security.toFixed(0))}/${formatNumber(
+            minSecurity.toFixed(0)
+          )}`,
+          `$${formatNumber(serverMoney.toFixed(0))}`,
+          `$${formatNumber(hackRate.toFixed(0))}/sec`,
+          `$${formatNumber(growRate.toFixed(0))}/sec`,
+          `${(percentMoney * 100).toFixed(0)}%`,
+          growTime,
+          name,
+        ];
       }
     );
+
+  makeTable(
+    [
+      [
+        "",
+        "hack",
+        "sec/min",
+        "money",
+        "money/sec",
+        "grow/sec",
+        "grow%",
+        "to max money",
+        "",
+      ],
+    ].concat(table)
+  ).forEach((row) => ns.tprint(row));
 }
 
 const dive = (source: string, last: string, ns: BitBurner): string[] => {
@@ -57,12 +101,6 @@ const dive = (source: string, last: string, ns: BitBurner): string[] => {
     .concat([source]);
 };
 
-const formatNumber = (num: number | string) => {
-  var parts = num.toString().split(".");
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return parts.join(".");
-};
-
 const isValidSort = (sort: string): sort is Column => {
   if (!COLUMNS.includes(sort as Column)) {
     return false;
@@ -70,9 +108,16 @@ const isValidSort = (sort: string): sort is Column => {
   return true;
 };
 
-const isValidSortOrder = (order: string): order is SortOrder => {
-  if (!SORT_ORDERS.includes(order as SortOrder)) {
-    return false;
-  }
-  return true;
+const formatTime = (date: Date) => {
+  const days = date.getUTCMonth() * 30 + (date.getUTCDate() - 1);
+  return [
+    days > 99 ? ">" : " ",
+    Math.min(days, 99).toString().padStart(2, " "),
+    "d ",
+    date.getUTCHours().toString().padStart(2, "0"),
+    ":",
+    date.getUTCMinutes().toString().padStart(2, "0"),
+    ":",
+    date.getUTCSeconds().toString().padStart(2, "0"),
+  ].join("");
 };

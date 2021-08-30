@@ -8,7 +8,8 @@ export async function main(ns: BitBurner) {
 
   while (true) {
     const target =
-      ns.args[0] ?? (await serverList(ns, "incomeRate", "desc"))[0].name;
+      ns.args[0] ??
+      (await serverList({ ns, column: "hackRate", sortOrder: "desc" }))[0].name;
     const hackTime = (ns.getHackTime(target) + 1) * 1000;
 
     for (const source of sources) {
