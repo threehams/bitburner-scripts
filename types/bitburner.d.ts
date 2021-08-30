@@ -2164,7 +2164,7 @@ export interface Singularity {
    * ```
    * @ramCost 3 GB
    * @singularity Level 2
-   * @param [companyName] Name of company to work for. Must be an exact match. Optional. If not specified, this argument defaults to the last job that you worked
+   * @param companyName Name of company to work for. Must be an exact match. Optional. If not specified, this argument defaults to the last job that you worked
    * @returns True if the player starts working, and false otherwise.
    */
   workForCompany(companyName?: CompanyName): boolean;
@@ -2423,7 +2423,7 @@ export interface Singularity {
    *
    * @ramCost 5 GB
    * @singularity Level 3
-   * @param [purchased] Specifies whether the returned array should include Augmentations you have purchased but not yet installed. By default, this argument is false which means that the return value will NOT have the purchased Augmentations.
+   * @param purchased Specifies whether the returned array should include Augmentations you have purchased but not yet installed. By default, this argument is false which means that the return value will NOT have the purchased Augmentations.
    * @returns Array containing the names (as strings) of all Augmentations you have.
    */
   getOwnedAugmentations(purchased?: boolean): AugmentName[];
@@ -2738,7 +2738,7 @@ export interface HackNet {
    * ```
    * @ramCost 0 GB
    * @param upgName Name of the upgrade of Hacknet Node.
-   * @param [upgTarget] Object to which upgrade applies. Required for certain upgrades.
+   * @param upgTarget Object to which upgrade applies. Required for certain upgrades.
    * @returns True if the upgrade is successfully purchased, and false otherwise..
    */
   spendHashes(upgName: HashUpgrades, upgTarget?: Host): boolean;
@@ -2896,7 +2896,7 @@ export interface BladeBurner {
    * @ramCost 4 GB
    * @param type Type of action.
    * @param name Name of action. Must be an exact match.
-   * @param [level] Optional action level at which to calculate the gain
+   * @param level Optional action level at which to calculate the gain
    * @returns Average Bladeburner reputation gain for successfully completing the specified action.
    */
   getActionRepGain(
@@ -3303,7 +3303,7 @@ export interface CodingContract {
    * @ramCost 10 GB
    * @param answer Solution for the contract.
    * @param filename Filename of the contract.
-   * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
+   * @param host Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns True if the solution was correct, false otherwise.
    */
   attempt(
@@ -3318,8 +3318,8 @@ export interface CodingContract {
    * @ramCost 10 GB
    * @param answer Solution for the contract.
    * @param filename Filename of the contract.
-   * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
-   * @param [opts] Optional parameters for configuring function behavior.
+   * @param host Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
+   * @param opts Optional parameters for configuring function behavior.
    * @returns True if the solution was correct, false otherwise. If the returnReward option is configured, then the function will instead return a string. If the contract is successfully solved, the string will contain a description of the contract’s reward. Otherwise, it will be an empty string.
    */
   attempt(
@@ -3335,7 +3335,7 @@ export interface CodingContract {
    *
    * @ramCost 5 GB
    * @param filename Filename of the contract.
-   * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
+   * @param host Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns Name describing the type of problem posed by the Coding Contract.
    */
   getContractType(filename: string, host?: Host): CodingContractTypes;
@@ -3345,7 +3345,7 @@ export interface CodingContract {
    *
    * @ramCost 5 GB
    * @param filename Filename of the contract.
-   * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
+   * @param host Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns Contract’s text description.
    */
   getDescription(filename: string, host?: Host): string;
@@ -3357,7 +3357,7 @@ export interface CodingContract {
    *
    * @ramCost 5 GB
    * @param filename Filename of the contract.
-   * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
+   * @param host Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns The specified contract’s data;
    */
   getData(filename: string, host?: Host): string;
@@ -3367,7 +3367,7 @@ export interface CodingContract {
    *
    * @ramCost 2 GB
    * @param filename Filename of the contract.
-   * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
+   * @param host Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns How many attempts are remaining for the contract;
    */
   getNumTriesRemaining(filename: string, host?: Host): number;
@@ -3833,7 +3833,7 @@ export interface BitBurner extends TIX, Singularity {
    * ```
    * @ramCost 0.1 GB
    * @param host IP or hostname of the target server to hack.
-   * @param [opts] Optional parameters for configuring function behavior.
+   * @param opts Optional parameters for configuring function behavior.
    * @returns {Promise<number>} The amount of money stolen if the hack is successful, and zero otherwise.
    */
   hack(host: Host, opts?: BasicHGWOptions): Promise<number>;
@@ -3858,7 +3858,7 @@ export interface BitBurner extends TIX, Singularity {
    * ```
    * @ramCost 0.15 GB
    * @param host IP or hostname of the target server to grow.
-   * @param [opts] Optional parameters for configuring function behavior.
+   * @param opts Optional parameters for configuring function behavior.
    * @returns {Promise<number>} The number by which the money on the server was multiplied for the growth.
    */
   grow(host: Host, opts?: BasicHGWOptions): Promise<number>;
@@ -3879,7 +3879,7 @@ export interface BitBurner extends TIX, Singularity {
    * ```
    * @ramCost 0.15 GB
    * @param host IP or hostname of the target server to weaken.
-   * @param [opts] Optional parameters for configuring function behavior.
+   * @param opts Optional parameters for configuring function behavior.
    * @returns {Promise<number>} The amount by which the target server’s security level was decreased. This is equivalent to 0.05 multiplied by the number of script threads.
    */
   weaken(host: Host, opts?: BasicHGWOptions): Promise<number>;
@@ -4044,9 +4044,9 @@ export interface BitBurner extends TIX, Singularity {
    * getScriptLogs("foo.script", "foodnstuff", 1, "test");
    * ```
    * @ramCost 0 GB
-   * @param [fn] Optional. Filename of script to get logs from.
-   * @param [ip] Optional. IP or hostname of the server that the script is on.
-   * @param [args] Arguments to identify which scripts to get logs for.
+   * @param fn Optional. Filename of script to get logs from.
+   * @param ip Optional. IP or hostname of the server that the script is on.
+   * @param args Arguments to identify which scripts to get logs for.
    * @returns Returns an string array, where each line is an element in the array. The most recently logged line is at the end of the array.
    */
   getScriptLogs(filename?: Script, ip?: Host, ...args: string[]): string[];
@@ -4198,8 +4198,8 @@ export interface BitBurner extends TIX, Singularity {
    * ```
    * @ramCost 1 GB
    * @param script Filename of script to run.
-   * @param [numThreads] Optional thread count for new script. Set to 1 by default. Will be rounded to nearest integer.
-   * @param [args] Additional arguments to pass into the new script that is being run. Note that if any arguments are being passed into the new script, then the second argument numThreads must be filled in with a value.
+   * @param numThreads Optional thread count for new script. Set to 1 by default. Will be rounded to nearest integer.
+   * @param args Additional arguments to pass into the new script that is being run. Note that if any arguments are being passed into the new script, then the second argument numThreads must be filled in with a value.
    * @returns Returns the PID of a successfully started script, and 0 otherwise.
    */
   run(script: Script, numThreads?: number, ...args: string[]): number;
@@ -4235,8 +4235,8 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 1.3 GB
    * @param script Filename of script to execute.
    * @param host IP or hostname of the `target server` on which to execute the script.
-   * @param [numThreads] Optional thread count for new script. Set to 1 by default. Will be rounded to nearest integer.
-   * @param [args] Additional arguments to pass into the new script that is being run. Note that if any arguments are being passed into the new script, then the third argument numThreads must be filled in with a value.
+   * @param numThreads Optional thread count for new script. Set to 1 by default. Will be rounded to nearest integer.
+   * @param args Additional arguments to pass into the new script that is being run. Note that if any arguments are being passed into the new script, then the third argument numThreads must be filled in with a value.
    * @returns Returns the PID of a successfully started script, and 0 otherwise.
    */
   exec(
@@ -4262,7 +4262,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 2 GB
    * @param script Filename of script to execute.
    * @param numThreads Number of threads to spawn new script with. Will be rounded to nearest integer.
-   * @param [args] Additional arguments to pass into the new script that is being run.
+   * @param args Additional arguments to pass into the new script that is being run.
    */
   spawn(script: Script, numThreads?: number, ...args: string[]): void;
 
@@ -4290,7 +4290,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 0.5 GB
    * @param script Filename of the script to kill
    * @param host IP or hostname of the server on which to kill the script.
-   * @param [args] Arguments to identify which script to kill.
+   * @param args Arguments to identify which script to kill.
    * @returns True if the script is successfully killed, and false otherwise.
    */
   kill(script: Script, host: Host, ...args: string[]): boolean;
@@ -4626,7 +4626,7 @@ export interface BitBurner extends TIX, Singularity {
    * ```
    * @ramCost 0.1 GB
    * @param filename Filename of file to check.
-   * @param [host] Host or IP of target server. This is optional. If it is not specified then the function will use the current server as the target server.
+   * @param host Host or IP of target server. This is optional. If it is not specified then the function will use the current server as the target server.
    * @returns True if specified file exists, and false otherwise.
    */
   fileExists(filename: string, host?: Host): boolean;
@@ -4654,7 +4654,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 0.1 GB
    * @param script Filename of script to check. This is case-sensitive.
    * @param host Host or IP of target server.
-   * @param [args] Arguments to specify/identify which scripts to search for.
+   * @param args Arguments to specify/identify which scripts to search for.
    * @returns True if specified script is running on the target server, and false otherwise.
    */
   isRunning(pid: number): boolean;
@@ -5266,7 +5266,7 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 1 GB
    * @param name Filename of file to remove. Must include the extension.
-   * @param [host] Host or IP Address of the server on which to delete the file. Optional. Defaults to current server.
+   * @param host Host or IP Address of the server on which to delete the file. Optional. Defaults to current server.
    * @returns True if it successfully deletes the file, and false otherwise.
    */
   rm(name: string, host?: Host): boolean;
@@ -5320,7 +5320,7 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 0.1 GB
    * @param script Filename of script. This is case-sensitive.
-   * @param [host] Host or IP of target server the script is located on. This is optional, If it is not specified then the function will se the current server as the target server.
+   * @param host Host or IP of target server the script is located on. This is optional, If it is not specified then the function will se the current server as the target server.
    * @returns Amount of RAM required to run the specified script on the target server, and 0 if the script does not exist.
    */
   getScriptRam(script: Script, host?: Host): number;
@@ -5331,8 +5331,8 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 0.05 GB
    * @param host Host or IP of target server.
-   * @param [hackLvl] Optional hacking level for the calculation. Defaults to player’s current hacking level.
-   * @param [intLvl] Optional intelligence level for the calculation. Defaults to player’s current intelligence level. (Intelligence is unlocked after obtaining Source-File 5).
+   * @param hackLvl Optional hacking level for the calculation. Defaults to player’s current hacking level.
+   * @param intLvl Optional intelligence level for the calculation. Defaults to player’s current intelligence level. (Intelligence is unlocked after obtaining Source-File 5).
    * @returns Returns the amount of time in seconds it takes to execute the {@link hack} Netscript function. Returns Infinity if called on a Hacknet Server.
    */
   getHackTime(host: Host, hackLvl?: number, intLvl?: number): number;
@@ -5343,8 +5343,8 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 0.05 GB
    * @param host Host or IP of target server.
-   * @param [hackLvl] Optional hacking level for the calculation. Defaults to player’s current hacking level.
-   * @param [intLvl] Optional intelligence level for the calculation. Defaults to player’s current intelligence level. (Intelligence is unlocked after obtaining Source-File 5).
+   * @param hackLvl Optional hacking level for the calculation. Defaults to player’s current hacking level.
+   * @param intLvl Optional intelligence level for the calculation. Defaults to player’s current intelligence level. (Intelligence is unlocked after obtaining Source-File 5).
    * @returns Returns the amount of time in seconds it takes to execute the {@link grow} Netscript function. Returns Infinity if called on a Hacknet Server.
    */
   getGrowTime(host: Host, hackLvl?: number, intLvl?: number): number;
@@ -5355,8 +5355,8 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 0.05 GB
    * @param host Host or IP of target server.
-   * @param [hackLvl] Optional hacking level for the calculation. Defaults to player’s current hacking level.
-   * @param [intLvl] Optional intelligence level for the calculation. Defaults to player’s current intelligence level. (Intelligence is unlocked after obtaining Source-File 5).
+   * @param hackLvl Optional hacking level for the calculation. Defaults to player’s current hacking level.
+   * @param intLvl Optional intelligence level for the calculation. Defaults to player’s current intelligence level. (Intelligence is unlocked after obtaining Source-File 5).
    * @returns Returns the amount of time in seconds it takes to execute the {@link grow} Netscript function. Returns Infinity if called on a Hacknet Server.
    */
   getWeakenTime(host: Host, hackLvl?: number, intLvl?: number): number;
@@ -5379,7 +5379,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 0.1 GB
    * @param script Filename of script.
    * @param host Server on which script is running.
-   * @param [args] Arguments that the script is running with.
+   * @param args Arguments that the script is running with.
    * @returns {(number|[number,number])} Amount of income the specified script generates while online.
    */
   getScriptIncome(
@@ -5399,7 +5399,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 0.1 GB
    * @param script Filename of script.
    * @param host Server on which script is running.
-   * @param [args] Arguments that the script is running with.
+   * @param args Arguments that the script is running with.
    * @returns Amount of hacking experience the specified script generates while online.
    */
   getScriptExpGain(script: Script, host: Host, ...args: string[]): number;
@@ -5515,7 +5515,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 0 GB
    * @param url URL to pull data from.
    * @param target Filename to write data to. Must be script or text file.
-   * @param [host] Optional hostname/ip of server for target file.
+   * @param host Optional hostname/ip of server for target file.
    * @returns {Promise<boolean>} True if the data was successfully retrieved from the URL, false otherwise.
    */
   wget(url: string, target: string, host?: string): Promise<boolean>;
