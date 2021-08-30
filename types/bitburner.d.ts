@@ -441,6 +441,8 @@ export type StockOrder = {
 };
 
 export interface ProcessInfo {
+  /** ID for this process */
+  pid: number;
   /** Script name. */
   filename: Script;
   /** Number of threads script is running with */
@@ -617,6 +619,298 @@ export type HashUpgrades =
   | "Exchange for Bladeburner Rank"
   | "Exchange for Bladeburner SP"
   | "Generate Coding Contract";
+
+export interface HackNetNodeConstants {
+  /** Multiplied by the node's level to get the node's base income */
+  MoneyGainPerLevel: number;
+  /** A multiplier used when buying new nodes or upgrading levels */
+  BaseCost: number;
+  /** A multiplier used when upgrading levels */
+  LevelBaseCost: number;
+  /** A multiplier used when upgrading RAM */
+  RamBaseCost: number;
+  /** A multiplier used when buying additional cores */
+  CoreBaseCost: number;
+  /** The root of an exponent used when buying new nodes */
+  PurchaseNextMult: number;
+  /** The root of an exponent used when upgrading levels */
+  UpgradeLevelMult: number;
+  /** The root of an exponent used when upgrading RAM */
+  UpgradeRamMult: number;
+  /** The root of an exponent used when buying additional cores */
+  UpgradeCoreMult: number;
+  /** Maximum level a node can have */
+  MaxLevel: number;
+  /** Maximum RAM a node can have */
+  MaxRam: number;
+  /** Maximum number of cores a node can have */
+  MaxCores: number;
+}
+
+export interface HackNetServerConstants {
+  /** Multiplied by the server's level to get the server's base income */
+  HashesPerLevel: number;
+  /** A multiplier used when buying new nodes or upgrading levels */
+  BaseCost: number;
+  /** A multiplier used when upgrading RAM */
+  RamBaseCost: number;
+  /** A multiplier used when buying additional cores */
+  CoreBaseCost: number;
+  /** A multiplier used when upgrading cache */
+  CacheBaseCost: number;
+  /** The root of an exponent used when buying new servers */
+  PurchaseMult: number;
+  /** The root of an exponent used when upgrading levels */
+  UpgradeLevelMult: number;
+  /** The root of an exponent used when upgrading RAM */
+  UpgradeRamMult: number;
+  /** The root of an exponent used when buying additional cores */
+  UpgradeCoreMult: number;
+  /** The root of an exponent used when upgrading cache */
+  UpgradeCacheMult: number;
+  /** Maximum number of hacknet servers you can own */
+  MaxServers: number;
+  /** Maximum level a server can have */
+  MaxLevel: number;
+  /** Maximum RAM a server can have */
+  MaxRam: number;
+  /** Maximum number of cores a server can have */
+  MaxCores: number;
+  /** Maximum cache a server can have */
+  MaxCache: number;
+}
+
+export interface Player {
+  /** Agility Experience multiplier (from Source-Files and Augments) */
+  agility_exp_mult: number;
+  /** Current Agility experience points */
+  agility_exp: number;
+  /** Agility Level multiplier (from Source-Files and Augments) */
+  agility_mult: number;
+  /** Current Agility skill level */
+  agility: number;
+  /** Current BitNode number */
+  bitNodeN: number;
+  /** Bladeburner Field Analysis multiplier (from Source-Files and Augments) */
+  bladeburner_analysis_mult: number;
+  /** Bladeburner Max Stamina multiplier (from Source-Files and Augments) */
+  bladeburner_max_stamina_mult: number;
+  /** Bladeburner Stamina Gain multiplier (from Source-Files and Augments) */
+  bladeburner_stamina_gain_mult: number;
+  /** Bladeburner Success Chance multiplier (from Source-Files and Augments) */
+  bladeburner_success_chance_mult: number;
+  /** Charisma Experience multiplier (from Source-Files and Augments) */
+  charisma_exp_mult: number;
+  /** Current Charisma experience points */
+  charisma_exp: number;
+  /** Charisma Level multiplier (from Source-Files and Augments) */
+  charisma_mult: number;
+  /** Current Charisma skill level */
+  charisma: number;
+  /** Name of city you are currently in */
+  city: string;
+  /** Name of the class the player is currently studying */
+  className: string;
+  /** Company reputation gain multiplier (from Source-Files and Augments) */
+  company_rep_mult: number;
+  /** Name of the program the player is currently creating */
+  createProgramName: string;
+  /** Hacking skill required to make that program */
+  createProgramReqLvl: number;
+  /** Crime money multiplier (from Source-Files and Augments) */
+  crime_money_mult: number;
+  /** Crime success multiplier (from Source-Files and Augments) */
+  crime_success_mult: number;
+  /** Name of the crime the player last started */
+  crimeType: string;
+  /** Description of the kind of work the player is currently doing */
+  currentWorkFactionDescription: string;
+  /** Name of the faction the player is currently working for */
+  currentWorkFactionName: string;
+  /** Defense Experience multiplier (from Source-Files and Augments) */
+  defense_exp_mult: number;
+  /** Current Defense experience points */
+  defense_exp: number;
+  /** Defense Level multiplier (from Source-Files and Augments) */
+  defense_mult: number;
+  /** Current Defense skill level */
+  defense: number;
+  /** Dexterity Experience multiplier (from Source-Files and Augments) */
+  dexterity_exp_mult: number;
+  /** Current Dexterity experience points */
+  dexterity_exp: number;
+  /** Dexterity Level multiplier (from Source-Files and Augments) */
+  dexterity_mult: number;
+  /** Current Dexterity skill level */
+  dexterity: number;
+  /** Faction reputation gain multiplier (from Source-Files and Augments) */
+  faction_rep_mult: number;
+  /** An array of factions the player is currently a member of */
+  factions: [];
+  /** Hacking Chance multiplier (from Source-Files and Augments) */
+  hacking_chance_mult: number;
+  /** Hacking Experience multiplier (from Source-Files and Augments) */
+  hacking_exp_mult: number;
+  /** Current Hacking experience points */
+  hacking_exp: number;
+  /** Hacking Growth multiplier (from Source-Files and Augments) */
+  hacking_grow_mult: number;
+  /** Hacking Money multiplier (from Source-Files and Augments) */
+  hacking_money_mult: number;
+  /** Hacking Level multiplier (from Source-Files and Augments) */
+  hacking_mult: number;
+  /** Current Hacking skill level */
+  hacking_skill: number;
+  /** Hacking Speed multiplier (from Source-Files and Augments) */
+  hacking_speed_mult: number;
+  /** Hacknet Node Core purchase cost multiplier (from Source-Files and Augments) */
+  hacknet_node_core_cost_mult: number;
+  /** Hacknet Node level upgrade cost multiplier (from Source-Files and Augments) */
+  hacknet_node_level_cost_mult: number;
+  /** Hacknet Node production multiplier (from Source-Files and Augments) */
+  hacknet_node_money_mult: number;
+  /** Hacknet Node purchase cost multiplier (from Source-Files and Augments) */
+  hacknet_node_purchase_cost_mult: number;
+  /** Hacknet Node RAM upgrade cost multiplier (from Source-Files and Augments) */
+  hacknet_node_ram_cost_mult: number;
+  /** Boolean indicating whether the player has 4S Market Data Access */
+  has4SData: false;
+  /** Boolean indicating whether the player has 4S Market Data TIX API Access */
+  has4SDataTixApi: false;
+  /** Boolean indicating whether the player has TIX API Access */
+  hasTixApiAccess: false;
+  /** Boolean indicating whether the player has a WSE Account */
+  hasWseAccount: false;
+  /** Current health points */
+  hp: number;
+  /** Current Intelligence skill level (from BitNode-5) */
+  intelligence: number;
+  /** Boolean indicating whether the player is currently performing work */
+  isWorking: false;
+  /** A mapping of companies the player works for to the title of the player's job at that company */
+  jobs: {};
+  /** Name of the last location visited */
+  location: string;
+  /** Maximum health points */
+  max_hp: number;
+  /** Current money */
+  money: number;
+  /** Milliseconds since the last time Augmentations were installed */
+  playtimeSinceLastAug: number;
+  /** Milliseconds since this BitNode was started */
+  playtimeSinceLastBitnode: number;
+  /** Strength Experience multiplier (from Source-Files and Augments) */
+  strength_exp_mult: number;
+  /** Current Strength experience points */
+  strength_exp: number;
+  /** Strength Level multiplier (from Source-Files and Augments) */
+  strength_mult: number;
+  /** Current Strength skill level */
+  strength: number;
+  /** Boolean indicating whether or not you have a tor router */
+  tor: false;
+  /** Total amount of time the game has been running, in milliseconds */
+  totalPlaytime: number;
+  /** Salary multiplier (from Source-Files and Augments) */
+  work_money_mult: number;
+  /** Total Agility experience gained while working thus far */
+  workAgiExpGained: number;
+  /** Amount of Agility experience the player will gain every cycle */
+  workAgiExpGainRate: number;
+  /** Total Charisma experience gained while working thus far */
+  workChaExpGained: number;
+  /** Amount of Charisma experience the player will gain every cycle */
+  workChaExpGainRate: number;
+  /** Total Defense experience gained while working thus far */
+  workDefExpGained: number;
+  /** Amount of Defense experience the player will gain every cycle */
+  workDefExpGainRate: number;
+  /** Total Dexterity experience gained while working thus far */
+  workDexExpGained: number;
+  /** Amount of Dexterity experience the player will gain every cycle */
+  workDexExpGainRate: number;
+  /** Total Hacking experience gained while working thus far */
+  workHackExpGained: number;
+  /** Amount of Hacking experience the player will gain every cycle (fifth of a second) */
+  workHackExpGainRate: number;
+  /** Total Money gained while working thus far */
+  workMoneyGained: number;
+  /** Amount of Money the player will gain every cycle */
+  workMoneyGainRate: number;
+  /** Amount of Money the player will lose every cycle */
+  workMoneyLossRate: number;
+  /** Total Reputation gained while working thus far */
+  workRepGained: number;
+  /** Amount of Reputation the player will gain every cycle */
+  workRepGainRate: number;
+  /** Total Strength experience gained while working thus far */
+  workStrExpGained: number;
+  /** Amount of Strength experience the player will gain every cycle */
+  workStrExpGainRate: number;
+  /** Name of the kind of work the player is performing */
+  workType: string;
+}
+
+export interface Server {
+  cpuCores: number;
+  ftpPortOpen: boolean;
+  hasAdminRights: boolean;
+  hostname: string;
+  httpPortOpen: boolean;
+  ip: string;
+  isConnectedTo: boolean;
+  maxRam: number;
+  organizationName: string;
+  ramUsed: number;
+  smtpPortOpen: boolean;
+  sqlPortOpen: boolean;
+  sshPortOpen: boolean;
+  backdoorInstalled: false;
+  baseDifficulty: number;
+  hackDifficulty: number;
+  minDifficulty: number;
+  moneyAvailable: number;
+  moneyMax: number;
+  numOpenPortsRequired: number;
+  openPortCount: number;
+  purchasedByPlayer: boolean;
+  requiredHackingSkill: number;
+  serverGrowth: number;
+}
+
+export interface RunningScriptInfo {
+  /** Script arguments */
+  args: string[];
+  /** Script filename */
+  filename: string;
+  /** This script's logs. An array of log entries */
+  logs: string[];
+  /**
+   * Flag indicating whether the logs have been updated since
+   * the last time the UI was updated
+   */
+  logUpd: boolean;
+  /** Total amount of hacking experience earned from this script when offline */
+  offlineExpGained: number;
+  /** Total amount of money made by this script when offline */
+  offlineMoneyMade: number;
+  /** Number of seconds that the script has been running offline */
+  offlineRunningTime: number;
+  /** Total amount of hacking experience earned from this script when online */
+  onlineExpGained: number;
+  /** Total amount of money made by this script when online */
+  onlineMoneyMade: number;
+  /** Number of seconds that this script has been running online */
+  onlineRunningTime: number;
+  /** Process ID. */
+  pid: number;
+  /** How much RAM this script uses for ONE thread */
+  ramUsage: number;
+  /** IP of the server on which this script is running */
+  server: string;
+  /** Number of threads that this script is running with */
+  threads: number;
+}
 
 export interface PlayerStats {
   /** Hacking level */
@@ -1762,6 +2056,7 @@ export interface Singularity {
    *
    * Returns an object with the Player’s stats.
    *
+   * @deprecated use getPlayer()
    * @example
    * ```js
    * res = getStats();
@@ -1778,6 +2073,7 @@ export interface Singularity {
    *
    * Returns an object with various information about your character.
    *
+   * @deprecated use getPlayer()
    * @ramCost 0.5 GB
    * @singularity Level 1
    * @returns Object with various information about your character.
@@ -2578,7 +2874,7 @@ export interface BladeBurner {
    * @ramCost 4 GB
    * @param type Type of action.
    * @param name Name of action. Must be an exact match.
-   * @returns Estimated success chance for the specified action.
+   * @returns Lower and upper bound of the success chance for the specified action.
    */
   getActionEstimatedSuccessChance(
     type: BladeburnerActTypes,
@@ -2587,7 +2883,7 @@ export interface BladeBurner {
       | BladeburnerContracts
       | BladeburnerOperations
       | BladeburnerBlackOps
-  ): number;
+  ): [number, number];
 
   /**
    * You have to be employed in the Bladeburner division and be in BitNode-7
@@ -3006,25 +3302,29 @@ export interface CodingContract {
    *
    * @ramCost 10 GB
    * @param answer Solution for the contract.
-   * @param fn Filename of the contract.
+   * @param filename Filename of the contract.
    * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns True if the solution was correct, false otherwise.
    */
-  attempt(answer: string | string[] | number, fn: string, host?: Host): boolean;
+  attempt(
+    answer: string | string[] | number,
+    filename: string,
+    host?: Host
+  ): boolean;
 
   /**
    * Attempts to solve the Coding Contract with the provided solution.
    *
    * @ramCost 10 GB
    * @param answer Solution for the contract.
-   * @param fn Filename of the contract.
+   * @param filename Filename of the contract.
    * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @param [opts] Optional parameters for configuring function behavior.
    * @returns True if the solution was correct, false otherwise. If the returnReward option is configured, then the function will instead return a string. If the contract is successfully solved, the string will contain a description of the contract’s reward. Otherwise, it will be an empty string.
    */
   attempt(
     answer: string | string[] | number,
-    fn: string,
+    filename: string,
     host?: Host,
     opts?: CodingAttemptOptions
   ): boolean | string;
@@ -3034,21 +3334,21 @@ export interface CodingContract {
    * (e.g. Find Largest Prime Factor, Total Ways to Sum, etc.)
    *
    * @ramCost 5 GB
-   * @param fn Filename of the contract.
+   * @param filename Filename of the contract.
    * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns Name describing the type of problem posed by the Coding Contract.
    */
-  getContractType(fn: string, host?: Host): CodingContractTypes;
+  getContractType(filename: string, host?: Host): CodingContractTypes;
 
   /**
    * Get the full text description for the problem posed by the Coding Contract.
    *
    * @ramCost 5 GB
-   * @param fn Filename of the contract.
+   * @param filename Filename of the contract.
    * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns Contract’s text description.
    */
-  getDescription(fn: string, host?: Host): string;
+  getDescription(filename: string, host?: Host): string;
 
   /**
    * Get the data associated with the specific Coding Contract.
@@ -3056,21 +3356,21 @@ export interface CodingContract {
    * This is just the data that the contract wants you to act on in order to solve
    *
    * @ramCost 5 GB
-   * @param fn Filename of the contract.
+   * @param filename Filename of the contract.
    * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns The specified contract’s data;
    */
-  getData(fn: string, host?: Host): string;
+  getData(filename: string, host?: Host): string;
 
   /**
    * Get the number of tries remaining on the contract before it self-destructs.
    *
    * @ramCost 2 GB
-   * @param fn Filename of the contract.
+   * @param filename Filename of the contract.
    * @param [host] Host or IP of the server containing the contract. Optional. Defaults to current server if not provided.
    * @returns How many attempts are remaining for the contract;
    */
-  getNumTriesRemaining(fn: string, host?: Host): number;
+  getNumTriesRemaining(filename: string, host?: Host): number;
 }
 
 export interface Gang {
@@ -3697,27 +3997,27 @@ export interface BitBurner extends TIX, Singularity {
    * {@link exec}, {@link exit}.
    *
    * @ramCost 0 GB
-   * @param fn Name of function for which to disable logging.
+   * @param filename Name of function for which to disable logging.
    */
-  disableLog(fn: string): void;
+  disableLog(filename: string): void;
 
   /**
    * Re-enables logging for the given function. If `ALL` is passed into this
    * function as an argument, then it will revert the effects of disableLog(`ALL`).
    *
    * @ramCost 0 GB
-   * @param fn Name of function for which to enable logging.
+   * @param filename Name of function for which to enable logging.
    */
-  enableLog(fn: string): void;
+  enableLog(filename: string): void;
 
   /**
    * Checks the status of the logging for the given function.
    *
    * @ramCost 0 GB
-   * @param fn Name of function to check.
+   * @param filename Name of function to check.
    * @returns Returns a boolean indicating whether or not logging is enabled for that function (or `ALL`)
    */
-  isLogEnabled(fn: string): boolean;
+  isLogEnabled(filename: string): boolean;
 
   /**
    * Returns a script’s logs. The logs are returned as an array, where each line is an element in the array.
@@ -3749,14 +4049,16 @@ export interface BitBurner extends TIX, Singularity {
    * @param [args] Arguments to identify which scripts to get logs for.
    * @returns Returns an string array, where each line is an element in the array. The most recently logged line is at the end of the array.
    */
-  getScriptLogs(fn?: Script, ip?: Host, ...args: string[]): string[];
+  getScriptLogs(filename?: Script, ip?: Host, ...args: string[]): string[];
 
   /**
    * Opens a script’s logs. This is functionally the same as the tail Terminal command.
    *
    * If the function is called with no arguments, it will open the current script’s logs.
    *
-   * Otherwise, the fn, hostname/ip, and args… arguments can be used to get the logs from another script.
+   * If the first argument is a number, it will be parsed as a process ID.
+   *
+   * Otherwise, the filename, hostname/ip, and args… arguments can be used to get the logs from another script.
    * Remember that scripts are uniquely identified by both their names and arguments.
    *
    * @example
@@ -3778,7 +4080,8 @@ export interface BitBurner extends TIX, Singularity {
    * @param host IP or hostname of the server to scan.
    * @param hostnames Optional boolean specifying whether the function should output hostnames (if true) or IP addresses (if false).
    */
-  tail(fn?: Script, ip?: Host, ...args: string[]): void;
+  tail(pid: number): void;
+  tail(filename?: Script, ip?: Host, ...args: string[]): void;
 
   /**
    * Returns an array containing the hostnames or IPs of all servers that are one
@@ -4272,11 +4575,26 @@ export interface BitBurner extends TIX, Singularity {
    * totalRam = res[0];
    * ramUsed = res[1];
    * ```
+   * @deprecated use getServerMaxRam() and getServerUsedRam()
    * @ramCost 0.1 GB
    * @param host Host or IP of target server.
    * @returns {[number,number]} Array with total and used memory on the specified server.
    */
   getServerRam(host: Host): [number, number];
+
+  /**
+   * Get the total RAM available on a server.
+   *
+   * @param host Host or IP of target server.
+   */
+  getServerMaxRam(host: Host): number;
+
+  /**
+   * Get the amount of RAM in use on a server.
+   *
+   * @param host Host or IP of target server.
+   */
+  getServerUsedRam(host: Host): number;
 
   /**
    * Returns a boolean denoting whether or not the specified server exists.
@@ -4315,7 +4633,8 @@ export interface BitBurner extends TIX, Singularity {
 
   /**
    * Returns a boolean indicating whether the specified script is running on the target server.
-   * Remember that a script is uniquely identified by both its name and its arguments.
+   * If the first argument is a number, it is parsed as a process ID.
+   * Otherwise, remember that a script is uniquely identified by both its name and its arguments.
    *
    * @example
    * ```js
@@ -4338,7 +4657,8 @@ export interface BitBurner extends TIX, Singularity {
    * @param [args] Arguments to specify/identify which scripts to search for.
    * @returns True if specified script is running on the target server, and false otherwise.
    */
-  isRunning(script: Script, host: Host, ...args: string[]): boolean;
+  isRunning(pid: number): boolean;
+  isRunning(script: Script, host?: Host, ...args: string[]): boolean;
 
   /**
    * Returns the cost to purchase a server with the specified amount of ram.
@@ -4354,6 +4674,425 @@ export interface BitBurner extends TIX, Singularity {
    * @returns The cost to purchase a server with the specified amount of ram.
    */
   getPurchasedServerCost(ram: number): number;
+
+  /**
+   * Returns an object with the Player’s stats. The result of this function can be passed to the formulas API.
+   *
+   * @return Player object
+   */
+  getPlayer(): Player;
+
+  /**
+   * If you are not in BitNode-5, then you must have Source-File 5-1 in order to run this function.
+   *
+   * This function is meant to be used in conjunction with the formulas API.
+   *
+   * Returns an object with the Server’s stats.
+   * @returns Server object
+   */
+  getServer(server: string): Server;
+
+  /**
+   *
+   * If you are not in BitNode-4, then you must have Level 3 of Source-File 4 in order to use this function.
+   *
+   * Get the hostname of the server the player is currently connected to.
+   *
+   * @returns Server hostname
+   */
+  getCurrentServer(): string;
+
+  formulas: {
+    basic: {
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * This function calculates the skillLevel that the given amount of `exp` would reach.
+       *
+       * @example
+       * skillLevel = formulas.basic.calculateSkill(1000);
+       * tprint("1000 exp would reach level " + skillLevel);
+       *
+       * @param experience Experience to convert to skillLevel
+       * @param multiplier Assume a specific skill multiplier (not exp multiplier)
+       * @returns skillLevel that `exp` would reach with that multiplier.
+       */
+      calculateSkill: (experience: number, multiplier: number) => number;
+
+      /**
+       *
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * This function calculates the amount of experience needed to reach the given skillLevel.
+       *
+       * @param skillLevel skillLevel to convert to exp.
+       * @param multiplier Assume a specific skill multipler (not exp multiplier).
+       * @returns number of exp required to reach given skillLevel with that multiplier.
+       */
+      calculateExp: (skillLevel: number, multiplier: number) => number;
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * Server can be acquired with the getServer function. Player can be acquired with the getPlayer function.
+       *
+       * This function calculates the probability to successfully hack a server.
+       *
+       * @example
+       *
+       * var server = getServer();
+       * server.hackDifficulty = server.minDifficulty;
+       * tprint(formulas.basic.hackChance(server, getPlayer()));
+       *
+       * @param server The server to hack.
+       * @param player The player.
+       * @returns The chance to hack that server, between 0 and 1.
+       */
+      hackChance: (server: Server, player: Player) => number;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * Server can be acquired with the getServer function. Player can be acquired with the getPlayer function.
+       *
+       * This function calculates the amount of exp obtained by hacking a server.
+       *
+       * @example
+       *
+       * tprint(formulas.basic.hackExp(getServer(), getPlayer()));
+       *
+       * @param server The server to hack.
+       * @param player The player.
+       * @returns The amount of exp that would be acquired if this server were to be hacked.
+       */
+      hackExp: (server: Server, player: Player) => number;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * Server can be acquired with the getServer function. Player can be acquired with the getPlayer function.
+       *
+       * This function calculates the percentage of money hacked from a server. Multiply this by thread count to calculate the percentage for more than 1 thread.
+       *
+       * @example
+       *
+       * server = getServer();
+       * server.hackDifficulty = server.minDifficulty;
+       * tprint(formulas.basic.hackPercent(server, getPlayer()));
+       *
+       * @param server The server to hack.
+       * @param player The player.
+       * @returns The percentage of money hacked from the server’s money.
+       */
+      hackPercent: (server: Server, player: Player) => number;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * Server can be acquired with the getServer function. Player can be acquired with the getPlayer function.
+       *
+       * This function calculates the amount of growth, as a multiplier, a server would receive with these parameters. Despite its name, it does not return a percentage.
+       *
+       * @example
+       *
+       * tprint(formulas.basic.growPercent(getServer(), 50, getPlayer()))
+       *
+       * @param server The server that receives the growth.
+       * @param threads The number of thread that would be used.
+       * @param player The player.
+       * @param cores The amount of cores on the host computer.
+       * @returns The amount the server’s money would be multiplied by with these parameters.
+       */
+      growPercent: (
+        server: Server,
+        threads: number,
+        player: Player,
+        cores: number
+      ) => number;
+
+      /**
+       *
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * Server can be acquired with the getServer function. Player can be acquired with the getPlayer function.
+       *
+       * This function calculates the amount of time it takes to hack a server.
+       *
+       * @example
+       *
+       * server = getServer();
+       * server.hackDifficulty = server.minDifficulty;
+       * tprint(formulas.basic.hackTime(server, getPlayer()));
+       *
+       * @param server The server to hack.
+       * @param player The player.
+       * @returns The time it takes to hack this server, in seconds.
+       */
+      hackTime: (server: Server, player: Player) => number;
+
+      /**
+       *
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * Server can be acquired with the getServer function. Player can be acquired with the getPlayer function.
+       *
+       * This function calculates the amount of time it takes to grow a server.
+       *
+       * @example
+       *
+       * server = getServer();
+       * server.hackDifficulty = server.minDifficulty;
+       * tprint(formulas.basic.growTime(server, getPlayer()));
+       *
+       * @param server The server to grow.
+       * @param player The player.
+       * @returns The time it takes to grow this server, in seconds.
+       */
+      growTime: (server: Server, player: Player) => number;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * Server can be acquired with the getServer function. Player can be acquired with the getPlayer function.
+       *
+       * This function calculates the amount of time it takes to weaken a server.
+       *
+       * @example
+       *
+       * server = getServer();
+       * server.hackDifficulty = server.minDifficulty;
+       * tprint(formulas.basic.weakenTime(server, getPlayer()));
+       *
+       * @param server The server to weaken.
+       * @param player The player.
+       * @returns The time it takes to weaken this server, in seconds.
+       */
+      weakenTime: () => void;
+    };
+    hacknetNodes: {
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * This function calculates the money rate of a node with the given stats.
+       *
+       * @example
+       *
+       * node = hacknet.getNodeStats(1);
+       * currentRate = formulas.hacknetNodes.moneyGainRate(node.level, node.ram, node.cores);
+       * levelRate = formulas.hacknetNodes.moneyGainRate(node.level+1, node.ram, node.cores);
+       * ramRate = formulas.hacknetNodes.moneyGainRate(node.level, node.ram*2, node.cores);
+       * coresRate = formulas.hacknetNodes.moneyGainRate(node.level, node.ram, node.cores+1);
+       *
+       * @param level – level of the node.
+       * @param ram – ram of the node.
+       * @param core – cores of the node.
+       * @returns Money per second that a node with those stats would gain per second.
+       */
+      moneyGainRate: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * This function calculates the cost of upgrading levels from any level to any level.
+       *
+       * @example
+       *
+       * formulas.hacknetNodes.levelUpgradeCost(1, 5); // returns: 2816
+       *
+       * @param startingLevel – Number of level at the start the calculation.
+       * @param extraLevels – Extra number of levels you want to buy. Default to 1.
+       * @param costMult – Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to go from startingLevel to startingLevel+extraLevels.
+       */
+      levelUpgradeCost: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * This function calculates the cost of upgrading levels from any level to any level.
+       *
+       * @example
+       *
+       * formulas.hacknetNodes.ramUpgradeCost(1, 5); // returns: 2095000
+       *
+       * @param startingRam – Amount of RAM at the start the calculation. Note: startingRam is the actual amount of ram, not the amount of levels of ram.
+       * @param extraRamLevels – Extra number of levels you want to buy. Default to 1.
+       * @param costMult – Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to go from startingRam to startingRam+extraRamLevels.
+       */
+      ramUpgradeCost: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * This function calculates the cost of upgrading cores from any level to any level.
+       *
+       * @example
+       *
+       * formulas.hacknetNodes.coreUpgradeCost(1, 5); // returns: 6355000
+       *
+       * @param startingCores – Number of core at the start the calculation.
+       * @param extraCores – Extra number of cores you want to buy. Default to 1.
+       * @param costMult – Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to go from startingCores to startingCores+extraCores.
+       */
+      coreUpgradeCost: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * This function calculates the cost purchasing a hacknet node.
+       *
+       * @example
+       *
+       * formulas.hacknetNodes.hacknetNodeCost(2); // returns: 1800
+       *
+       * @param nodeIndex Number of the new node.
+       * @param costMultiplier Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to buy your nodeN th node.
+       */
+      hacknetNodeCost: (nodeIndex: number, costMultiplier: number) => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
+       *
+       * @example
+       * tprint(
+       *   "Maximum RAM a hacknet node can have: " +
+       *     formulas.hacknetNodes.constants().MaxRam +
+       *     " GB."
+       * );
+       *
+       *
+       * @returns an object containing various constants used for formulas.
+       */
+      constants: () => HackNetNodeConstants;
+    };
+    hacknetServers: {
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function. In addition, if you are not in BitNode-9, then you must have Source-File 9-1 in order to use this function.
+       *
+       * This function calculates the hash rate of a server with the given stats.
+       *
+       * @example
+       *
+       * server = hacknet.getNodeStats(1);
+       * currentRate = formulas.hacknetServers.hashGainRate(server.level, 0, server.ram, server.cores);
+       * levelRate = formulas.hacknetServers.hashGainRate(server.level+1, 0, server.ram, server.cores);
+       * ramRate = formulas.hacknetServers.hashGainRate(server.level, 0, server.ram*2, server.cores);
+       * coresRate = formulas.hacknetServers.hashGainRate(server.level, 0, server.ram, server.cores+1);
+       *
+       * @param level level of the server.
+       * @param ramUsed ram used on the server.
+       * @param maxRam max ram of the server.
+       * @param core cores of the server.
+       * @returns Hashes per second that a server with those stats would gain.
+       */
+      hashGainRate: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function. In addition, if you are not in BitNode-9, then you must have Source-File 9-1 in order to use this function.
+       *
+       * This function calculates the cost of upgrading levels from any level to any level.
+       *
+       * @example
+       *
+       * formulas.hacknetServers.levelUpgradeCost(1, 5); // returns: 2792000
+       *
+       * @param startingLevel Number of level at the start the calculation.
+       * @param extraLevels Extra number of levels you want to buy. Default to 1.
+       * @param costMult Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to go from startingLevel to startingLevel+extraLevels.
+       */
+      levelUpgradeCost: () => void;
+
+      /**
+       *
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function. In addition, if you are not in BitNode-9, then you must have Source-File 9-1 in order to use this function.
+       *
+       * This function calculates the cost of upgrading levels from any level to any level.
+       *
+       * @example
+       *
+       * formulas.hacknetServers.ramUpgradeCost(1, 5); // returns: 15810000
+       *
+       * @param startingRam Amount of RAM at the start the calculation. Note: startingRam is the actual amount of ram, not the amount of levels of ram.
+       * @param extraRamLevels Extra number of levels you want to buy. Default to 1.
+       * @param costMult Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to go from startingRam to startingRam+extraRamLevels.
+       */
+      ramUpgradeCost: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function. In addition, if you are not in BitNode-9, then you must have Source-File 9-1 in order to use this function.
+       *
+       * This function calculates the cost of upgrading cores from any level to any level.
+       *
+       * @example
+       *
+       * formulas.hacknetServers.coreUpgradeCost(1, 5); // returns: 12015000
+       *
+       * @param startingCores Number of core at the start the calculation.
+       * @param extraCores Extra number of cores you want to buy. Default to 1.
+       * @param costMult Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to go from startingCores to startingCores+extraCores.
+       */
+      coreUpgradeCost: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function. In addition, if you are not in BitNode-9, then you must have Source-File 9-1 in order to use this function.
+       *
+       * This function calculates the cost of upgrading cache from any level to any level.
+       *
+       * @example
+       *
+       * formulas.hacknetServers.cacheUpgradeCost(1, 5); // returns: 243170000
+       * 
+       * @param startingCache Cache level at the start the calculation.
+       * @param extraCacheLevels Extra number of cache level you want to buy. Default to 1.
+       * @param costMultiplier Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to go from startingLevel to startingLevel+extraLevels.
+
+       */
+      cacheUpgradeCost: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function. In addition, if you are not in BitNode-9, then you must have Source-File 9-1 in order to use this function.
+       *
+       * This function calculates amount of Hash require to buy level level of upgrade upgName.
+       *
+       * @example
+       *
+       * formulas.hacknetServers.hashUpgradeCost("Increase Maximum Money", 5); // returns: 250
+       *
+       * @param upgradeName Name of the Hash upgrade.
+       * @param level Level of the upgrade.
+       * @returns Amount of Hash.
+       */
+      hashUpgradeCost: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function. In addition, if you are not in BitNode-9, then you must have Source-File 9-1 in order to use this function.
+       *
+       * This function calculates the cost purchasing a hacknet node.
+       *
+       * @example
+       *
+       * formulas.hacknetNodes.hacknetServerCost(2); // returns: 1800000
+       *
+       * @param serverN Number of the new node.
+       * @param costMult Aug multiplier that reduces cost. Defaults to 1.
+       * @returns Money required to buy your serverN th node.
+       */
+      hacknetServerCost: () => void;
+
+      /**
+       * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function. In addition, if you are not in BitNode-9, then you must have Source-File 9-1 in order to use this function.
+       *
+       * Returns an object with constants for HackNet servers.
+       */
+      constants: () => HackNetServerConstants;
+    };
+  };
 
   /**
    * Purchased a server with the specified hostname and amount of RAM.
@@ -4728,6 +5467,30 @@ export interface BitBurner extends TIX, Singularity {
   prompt(txt: string): Promise<boolean>;
 
   /**
+   * Return information about a script.
+   *
+   * If run without arguments, this returns information on the currently-running script.
+   *
+   * If the first argument is a number, it is parsed as a process ID.
+   *
+   * Otherwise, the filename, hostname/ip, and args… arguments can be used to get the logs from another script.
+   * Remember that scripts are uniquely identified by both their names and arguments.
+   *
+   * @param pid Process ID for a script.
+   * @param filename Filename of the target script.
+   * @param hostname Hostname of the server running the script.
+   * @param args Arguments the script is running with
+   * @returns Object with script information, or null if a script is not found
+   */
+  getRunningScript(): RunningScriptInfo | null;
+  getRunningScript(pid: number): RunningScriptInfo | null;
+  getRunningScript(
+    filename: string,
+    hostname: string,
+    ...args: string[]
+  ): RunningScriptInfo | null;
+
+  /**
    * Retrieves data from a URL and downloads it to a file on the specified server.
    * The data can only be downloaded to a script (.script, .ns, .js) or a text file (.txt).
    * If the file already exists, it will be overwritten by this command.
@@ -4790,4 +5553,53 @@ export interface BitBurner extends TIX, Singularity {
     target: string,
     host: string
   ): BitNodeMultipliers;
+
+  /**
+   * If you are not in BitNode-4, then you must have Level 1 of Source-File 4 in order to use this function.
+   *
+   * This function will install a backdoor on the server you are currently connected to.
+   *
+   * @example
+   *
+   * connect("foodnstuff");
+   * installBackdoor();
+   */
+  installBackdoor(): Promise<void>;
+
+  /**
+   * milliseconds in the “D M H S” format
+   *
+   *Example:
+   *
+   * tFormat(3000);            // returns: "3 seconds"
+   * tFormat(10000000);        // returns: "2 hours 46 minutes 40 seconds"
+   * tFormat(10000023, true);  // returns: "2 hours 46 minutes 40.023 seconds"
+   *
+   * @param milliseconds Amount of milliseconds to format.
+   * @param milliPrecision Display time with millisecond precision.
+   */
+  tFormat(milliseconds: number, millisecondPrecision: number): string;
+
+  /**
+   * Creates a Gang with a faction. You need to have access to
+   * Gangs, the faction must be one of the approved gang factions,
+   * and you must be a member of that faction for the creation to
+   * be successful.
+   */
+  createGang(faction: FactionName): boolean;
+
+  /**
+   * Check if the player is in a gang.
+   *
+   * @returns `true` if the player is already in a gang.
+   */
+  inGang(): boolean;
+
+  /**
+   * Prints a raw formatted string to the terminal without prefixing the filename.
+   *
+   * @param format Format of the string to be printed.
+   * @param args Values to be formatted
+   */
+  tprintf(...messages: Message[]): void;
 }
