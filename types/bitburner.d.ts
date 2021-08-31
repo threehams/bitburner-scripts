@@ -1155,7 +1155,7 @@ type UnionToIntersection<T> = (T extends T ? (p: T) => void : never) extends (
   ? U
   : never;
 type FromEntries<T extends readonly [PropertyKey, any]> = T extends T
-  ? Record<T[0], T[1]>
+  ? Record<T[0], T[1] extends any[] ? string[] : T[1]>
   : never;
 type Flatten<T> = {} & {
   [P in keyof T]: T[P];
@@ -5489,7 +5489,9 @@ export interface BitBurner extends TIX, Singularity {
 
   flags<
     Key extends string,
-    TConfig extends [readonly [Key, any]] | Array<readonly [Key, any]>
+    TConfig extends
+      | [readonly [Key, string | number | boolean | string[]]]
+      | Array<readonly [Key, any]>
   >(
     config: TConfig
   ): Flatten<UnionToIntersection<FromEntries<TConfig[number]>>>;
