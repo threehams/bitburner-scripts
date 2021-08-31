@@ -1678,7 +1678,7 @@ export interface TIX {
    * ```
    * @ramCost 2 GB
    * @param sym Stock symbol.
-   * @returns {[number,number,number,number]} Array of four elements that represents the player’s position in a stock.
+   * @returns Array of four elements that represents the player’s position in a stock.
    */
   getStockPosition(sym: StockSymbol): [number, number, number, number];
 
@@ -2435,7 +2435,7 @@ export interface Singularity {
    *
    * @ramCost 5 GB
    * @singularity Level 3
-   * @returns {object[]} Array containing an object with number and level of the source file.
+   * @returns Array containing an object with number and level of the source file.
    */
   getOwnedSourceFiles(): SourceFileLvl[];
 
@@ -2479,7 +2479,7 @@ export interface Singularity {
    * @ramCost 5 GB
    * @singularity Level 3
    * @param augName Name of Augmentation.
-   * @returns {[number, number]} Array with first element as a reputation requirement and second element as the money cost.
+   * @returns Array with first element as a reputation requirement and second element as the money cost.
    */
   getAugmentationCost(augName: AugmentName): [number, number];
 
@@ -3244,7 +3244,7 @@ export interface BladeBurner {
    * }
    * ```
    * @ramCost 4 GB
-   * @returns {[number, number]} Array containing current stamina and max stamina.
+   * @returns Array containing current stamina and max stamina.
    */
   getStamina(): [number, number];
 
@@ -3834,7 +3834,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 0.1 GB
    * @param host IP or hostname of the target server to hack.
    * @param opts Optional parameters for configuring function behavior.
-   * @returns {Promise<number>} The amount of money stolen if the hack is successful, and zero otherwise.
+   * @returns The amount of money stolen if the hack is successful, and zero otherwise.
    */
   hack(host: Host, opts?: BasicHGWOptions): Promise<number>;
 
@@ -3859,7 +3859,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 0.15 GB
    * @param host IP or hostname of the target server to grow.
    * @param opts Optional parameters for configuring function behavior.
-   * @returns {Promise<number>} The number by which the money on the server was multiplied for the growth.
+   * @returns The number by which the money on the server was multiplied for the growth.
    */
   grow(host: Host, opts?: BasicHGWOptions): Promise<number>;
 
@@ -3880,7 +3880,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 0.15 GB
    * @param host IP or hostname of the target server to weaken.
    * @param opts Optional parameters for configuring function behavior.
-   * @returns {Promise<number>} The amount by which the target server’s security level was decreased. This is equivalent to 0.05 multiplied by the number of script threads.
+   * @returns The amount by which the target server’s security level was decreased. This is equivalent to 0.05 multiplied by the number of script threads.
    */
   weaken(host: Host, opts?: BasicHGWOptions): Promise<number>;
 
@@ -3958,7 +3958,6 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 0 GB
    * @param millis Number of milliseconds to sleep.
-   * @returns {Promise<void>}
    */
   sleep(millis: number): Promise<void>;
 
@@ -4578,7 +4577,7 @@ export interface BitBurner extends TIX, Singularity {
    * @deprecated use getServerMaxRam() and getServerUsedRam()
    * @ramCost 0.1 GB
    * @param host Host or IP of target server.
-   * @returns {[number,number]} Array with total and used memory on the specified server.
+   * @returns Array with total and used memory on the specified server.
    */
   getServerRam(host: Host): [number, number];
 
@@ -5283,9 +5282,10 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 1 GB
    * @param handle Port or text file to read from.
-   * @returns {(string|number|object)} Data in the specified text file or port.
+   * @returns Data in the specified text file or port.
    */
-  read<TContents = string>(handle: Handle): TContents;
+  read(filename: string): string;
+  read<TContents = string | number | object>(handle: Handle): TContents;
 
   /**
    * This function is used to peek at the data from a port. It returns the
@@ -5294,9 +5294,9 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 1 GB
    * @param port Port to peek. Must be an integer between 1 and 20.
-   * @returns {(string|number|object)} Data in the specified port.
+   * @returns Data in the specified port.
    */
-  peek(port: Port): string | number | object;
+  peek<TContents = string | number | object>(port: Port): TContents;
 
   /**
    * This function is used to clear data in a Netscript Ports or a text file.
@@ -5320,7 +5320,7 @@ export interface BitBurner extends TIX, Singularity {
    * @see https://bitburner.readthedocs.io/en/latest/netscript/netscriptmisc.html#netscript-ports
    * @ramCost 10 GB
    * @param port Port number. Must be an integer between 1 and 20.
-   * @returns {Array} Data in the specified port.
+   * @returns Data in the specified port.
    */
   getPortHandle(port: Port): any[];
 
@@ -5444,7 +5444,7 @@ export interface BitBurner extends TIX, Singularity {
    * @param script Filename of script.
    * @param host Server on which script is running.
    * @param args Arguments that the script is running with.
-   * @returns {(number|[number,number])} Amount of income the specified script generates while online.
+   * @returns Amount of income the specified script generates while online.
    */
   getScriptIncome(
     script: Script,
@@ -5526,7 +5526,7 @@ export interface BitBurner extends TIX, Singularity {
    *
    * @ramCost 0 GB
    * @param txt Text to appear in the prompt dialog box.
-   * @returns {Promise<boolean>} True if the player click “Yes” and false if the player clicks “No”.
+   * @returns True if the player click “Yes” and false if the player clicks “No”.
    */
   prompt(txt: string): Promise<boolean>;
 
@@ -5581,7 +5581,7 @@ export interface BitBurner extends TIX, Singularity {
    * @param url URL to pull data from.
    * @param target Filename to write data to. Must be script or text file.
    * @param host Optional hostname/ip of server for target file.
-   * @returns {Promise<boolean>} True if the data was successfully retrieved from the URL, false otherwise.
+   * @returns True if the data was successfully retrieved from the URL, false otherwise.
    */
   wget(url: string, target: string, host?: string): Promise<boolean>;
 
