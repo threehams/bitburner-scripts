@@ -1,6 +1,15 @@
 export type Message = unknown;
 export type Host = string;
 export type Script = string;
+export type Serializable =
+  | string
+  | number
+  | boolean
+  | any[]
+  | Record<PropertyKey, any>
+  | BigInt
+  | null
+  | undefined;
 export type StockSymbol =
   | "ECP"
   | "MGCP"
@@ -5285,7 +5294,7 @@ export interface BitBurner extends TIX, Singularity {
    * @returns Data in the specified text file or port.
    */
   read(filename: string): string;
-  read<TContents = string | number | object>(handle: Handle): TContents;
+  read<TContents = Serializable>(port: Port): TContents;
 
   /**
    * This function is used to peek at the data from a port. It returns the
@@ -5296,7 +5305,7 @@ export interface BitBurner extends TIX, Singularity {
    * @param port Port to peek. Must be an integer between 1 and 20.
    * @returns Data in the specified port.
    */
-  peek<TContents = string | number | object>(port: Port): TContents;
+  peek<TContents = Serializable>(port: Port): TContents;
 
   /**
    * This function is used to clear data in a Netscript Ports or a text file.
