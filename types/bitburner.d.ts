@@ -2106,7 +2106,7 @@ export interface Singularity {
    * If you are not in BitNode-4, then you must have Level 1 of Source-File 4 in order to use this function and the RAM cost is doubled.
    *
    * This function is used to end whatever ‘action’ the player is currently performing.
-   * The player will receive whatever money/experience/etc. he has earned from that action.
+   * The player will receive whatever money/experience/etc. they have earned from that action.
    *
    * The actions that can be stopped with this function are:
    *
@@ -2123,6 +2123,67 @@ export interface Singularity {
    * @returns True if the player’s action was ended, false if the player was not performing an action.
    */
   stopAction(): boolean;
+
+  /**
+   * If you are not in BitNode-4, then you must have Level 1 of Source-File 4 in order to use this function.
+   *
+   * This function will connect you to the specified server if it’s directly connected to the current server. You can also pass in ‘home’ to return to your home server from anywhere.
+   *
+   * @example
+   *
+   * connect("joesguns");
+   * connect("CSEC");
+   *
+   * @ramCost 2 GB
+   *
+   * @param hostname hostname of the server to connect.
+   * @singularity Level 1
+   * @returns true if the connection was a success.
+   */
+  connect(server: string): boolean;
+
+  /**
+   * If you are not in BitNode-4, then you must have Level 1 of Source-File 4 in order to use this function.
+   *
+   * This function will perform a manual hack on the server you are currently connected to.
+   *
+   * @example
+   *
+   * connect("foodnstuff");
+   * manualHack();
+   *
+   * @ramCost 2 GB
+   * @singularity Level 1
+   * @returns The amount of money stolen if the hack is successful, and zero otherwise
+   */
+  manualHack(): Promise<number>;
+
+  /**
+   * If you are not in BitNode-4, then you must have Level 1 of Source-File 4 in order to use this function.
+   *
+   * This function will install a backdoor on the server you are currently connected to.
+   *
+   * @example
+   *
+   * connect("foodnstuff");
+   * installBackdoor();
+   *
+   * @ramCost 2 GB
+   * @singularity Level 1
+   */
+  installBackdoor(): Promise<void>;
+
+  /**
+   * If you are not in BitNode-4, then you must have Level 1 of Source-File 4 in order to use this function.
+   *
+   * Hospitalize yourself, recovering all lost hp.
+   *
+   * @ramCost 1 GB
+   * @singularity Level 1
+   * @returns The cost of your visit to the hospital.
+   *
+   */
+  hospitalize(): number;
 
   /**
    * If you are not in BitNode-4, then you must have Level 2 of Source-File 4 in order to use this function and the RAM cost is doubled.
@@ -2537,8 +2598,9 @@ export interface Singularity {
    *
    * @ramCost 5 GB
    * @singularity Level 3
+   * @param cbScript Optional callback script. This is a script that will automatically be run after Augmentations are installed (after the reset). This script will be run with no arguments and 1 thread. It must be located on your home computer.
    */
-  softReset(): void;
+  softReset(cbScript?: Script): void;
 }
 
 export interface HackNet {
@@ -5629,20 +5691,6 @@ export interface BitBurner extends TIX, Singularity {
     target: string,
     host: string
   ): BitNodeMultipliers;
-
-  /**
-   * If you are not in BitNode-4, then you must have Level 1 of Source-File 4 in order to use this function.
-   *
-   * This function will install a backdoor on the server you are currently connected to.
-   *
-   * @example
-   *
-   * connect("foodnstuff");
-   * installBackdoor();
-   *
-   * @ramCost 2 GB
-   */
-  installBackdoor(): Promise<void>;
 
   /**
    * milliseconds in the “D M H S” format
