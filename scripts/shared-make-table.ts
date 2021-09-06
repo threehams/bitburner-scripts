@@ -1,5 +1,3 @@
-import { BitBurner } from "../types/bitburner";
-
 export const makeTable = (table: string[][]) => {
   const lengths: number[] = [];
   for (const row of table) {

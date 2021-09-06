@@ -22,6 +22,7 @@ export async function main(ns: BitBurner) {
         "dex",
         "agi",
         "cha",
+        "karma",
         "name",
       ],
     ].concat(
@@ -36,6 +37,7 @@ export async function main(ns: BitBurner) {
           `${formatNumber(crime.statRates.dexterity.toFixed(2))}/sec`,
           `${formatNumber(crime.statRates.agility.toFixed(2))}/sec`,
           `${formatNumber(crime.statRates.charisma.toFixed(2))}/sec`,
+          `${formatNumber(-crime.statRates.karma.toFixed(2))}/sec`,
           crime.name,
         ];
       })

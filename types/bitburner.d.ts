@@ -755,7 +755,7 @@ export interface Player {
   /** Faction reputation gain multiplier (from Source-Files and Augments) */
   faction_rep_mult: number;
   /** An array of factions the player is currently a member of */
-  factions: [];
+  factions: FactionName[];
   /** Hacking Chance multiplier (from Source-Files and Augments) */
   hacking_chance_mult: number;
   /** Hacking Experience multiplier (from Source-Files and Augments) */
@@ -799,11 +799,13 @@ export interface Player {
   /** A mapping of companies the player works for to the title of the player's job at that company */
   jobs: {};
   /** Name of the last location visited */
-  location: string;
+  location: City;
   /** Maximum health points */
   max_hp: number;
   /** Current money */
   money: number;
+  /** Number of people killed */
+  numPeopleKilled: number;
   /** Milliseconds since the last time Augmentations were installed */
   playtimeSinceLastAug: number;
   /** Milliseconds since this BitNode was started */
@@ -4055,6 +4057,10 @@ export interface BitBurner extends TIX, Singularity {
    */
   clearLog(): void;
 
+  heart: {
+    break: () => number;
+  };
+
   /**
    * Disables logging for the given function. Logging can be disabled
    * for all functions by passing `ALL` as the argument.
@@ -4794,7 +4800,7 @@ export interface BitBurner extends TIX, Singularity {
        * @param multiplier Assume a specific skill multiplier (not exp multiplier)
        * @returns skillLevel that `exp` would reach with that multiplier.
        */
-      calculateSkill: (experience: number, multiplier: number) => number;
+      calculateSkill: (experience: number, multiplier?: number) => number;
 
       /**
        *
@@ -4807,7 +4813,7 @@ export interface BitBurner extends TIX, Singularity {
        * @param multiplier Assume a specific skill multipler (not exp multiplier).
        * @returns number of exp required to reach given skillLevel with that multiplier.
        */
-      calculateExp: (skillLevel: number, multiplier: number) => number;
+      calculateExp: (skillLevel: number, multiplier?: number) => number;
       /**
        * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
        *
@@ -4992,8 +4998,8 @@ export interface BitBurner extends TIX, Singularity {
        */
       levelUpgradeCost: (
         startingLevel: number,
-        extraLevels: number,
-        costMultiplier: number
+        extraLevels?: number,
+        costMultiplier?: number
       ) => number;
 
       /**
@@ -5013,8 +5019,8 @@ export interface BitBurner extends TIX, Singularity {
        */
       ramUpgradeCost: (
         startingRam: number,
-        extraRamLevels: number,
-        costMultiplier: number
+        extraRamLevels?: number,
+        costMultiplier?: number
       ) => number;
 
       /**
@@ -5034,8 +5040,8 @@ export interface BitBurner extends TIX, Singularity {
        */
       coreUpgradeCost: (
         startingCores: number,
-        extraCores: number,
-        costMultiplier: number
+        extraCores?: number,
+        costMultiplier?: number
       ) => number;
 
       /**
@@ -5052,7 +5058,7 @@ export interface BitBurner extends TIX, Singularity {
        * @param costMultiplier Aug multiplier that reduces cost. Defaults to 1.
        * @returns Money required to buy your nodeN th node.
        */
-      hacknetNodeCost: (nodeIndex: number, costMultiplier: number) => number;
+      hacknetNodeCost: (nodeIndex: number, costMultiplier?: number) => number;
 
       /**
        * If you are not in BitNode-5, then you must have Source-File 5-1 in order to use this function.
@@ -5115,8 +5121,8 @@ export interface BitBurner extends TIX, Singularity {
        */
       levelUpgradeCost: (
         startingLevel: number,
-        extraLevels: number,
-        costMultiplier: number
+        extraLevels?: number,
+        costMultiplier?: number
       ) => number;
 
       /**
@@ -5137,8 +5143,8 @@ export interface BitBurner extends TIX, Singularity {
        */
       ramUpgradeCost: (
         startingRam: number,
-        extraRamLevels: number,
-        costMultiplier: number
+        extraRamLevels?: number,
+        costMultiplier?: number
       ) => number;
 
       /**
@@ -5158,8 +5164,8 @@ export interface BitBurner extends TIX, Singularity {
        */
       coreUpgradeCost: (
         startingCores: number,
-        extraCores: number,
-        costMultiplier: number
+        extraCores?: number,
+        costMultiplier?: number
       ) => number;
 
       /**
@@ -5179,8 +5185,8 @@ export interface BitBurner extends TIX, Singularity {
        */
       cacheUpgradeCost: (
         startingCache: number,
-        extraCacheLevels: number,
-        costMultiplier: number
+        extraCacheLevels?: number,
+        costMultiplier?: number
       ) => number;
 
       /**
@@ -5215,7 +5221,7 @@ export interface BitBurner extends TIX, Singularity {
        */
       hacknetServerCost: (
         serverIndex: number,
-        costMultiplier: number
+        costMultiplier?: number
       ) => number;
 
       /**
@@ -5589,7 +5595,7 @@ export interface BitBurner extends TIX, Singularity {
    * @param format Formatter.
    * @returns Formated number.
    */
-  nFormat(n: number, format: string): number;
+  nFormat(n: number, format: string): string;
 
   /**
    * Prompts the player with a dialog box with two options: “Yes” and “No”.

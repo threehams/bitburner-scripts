@@ -48,6 +48,7 @@ export async function main(ns: BitBurner) {
         security,
         serverMoney,
         percentMoney,
+        ports,
         minSecurity,
         threadsToGrow,
         threadsToHack,
@@ -65,6 +66,7 @@ export async function main(ns: BitBurner) {
             ? "🟧"
             : "🟥",
           formatNumber(hackLevel.toFixed(0)),
+          ns.nFormat(ports, "0,0"),
           `${formatNumber(security.toFixed(0))}/${formatNumber(
             minSecurity.toFixed(0)
           )}`,
@@ -88,10 +90,9 @@ export async function main(ns: BitBurner) {
       [
         "",
         "hack",
+        "ports",
         "sec/min",
         "money",
-        // "money/sec",
-        // "grow/sec",
         "grow%",
         "hackt",
         "growt",

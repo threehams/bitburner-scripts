@@ -84,6 +84,7 @@ export const serverList = async ({
         name: server,
         nukable,
         percentMoney,
+        ports: ns.getServerNumPortsRequired(server),
         security: ns.getServerSecurityLevel(server),
         minSecurity: ns.getServerMinSecurityLevel(server),
         serverMoney,

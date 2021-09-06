@@ -1,5 +1,6 @@
 import { BitBurner } from "../types/bitburner";
 import { allServers } from "./shared-all-servers";
+import { buyPrograms } from "./shared-buy-programs";
 import { buyServer, canBuyServer } from "./shared-buy-server";
 import { nukeAll } from "./shared-nuke-all";
 import { serverList } from "./shared-server-list";
@@ -56,6 +57,7 @@ export async function main(ns: BitBurner) {
       upgradeServers(ns, ramUpgrade);
       totalThreadsCache = undefined;
     }
+    buyPrograms(ns, getProgramCount(ns));
     const sources = (home ? ["home"] : []).concat(
       allServers(ns).filter((server) => ns.hasRootAccess(server))
     );
@@ -88,8 +90,6 @@ export async function main(ns: BitBurner) {
         return;
       }
       targets = [target];
-      // } else if (isLowLevel(ns, sources)) {
-      //   targets = [await findBestTarget({ ns, sources })];
     } else {
       targets = (
         await serverList({
@@ -325,14 +325,25 @@ const serverUpgradeRam = (ns: BitBurner) => {
   return undefined;
 };
 
-const isLowLevel = (ns: BitBurner, sources: string[]) => {
-  return getTotalThreads(ns, sources, 1.7) < 2500;
-};
-
 const isHighLevel = (ns: BitBurner, sources: string[]) => {
   return getTotalThreads(ns, sources, 1.7) > 10000;
 };
 
 const isSuperLevel = (ns: BitBurner, sources: string[]) => {
   return getTotalThreads(ns, sources, 1.7) > 500000;
+};
+
+const getProgramCount = (ns: BitBurner) => {
+  const hackLevel = ns.getHackingLevel();
+
+  if (hackLevel > 800) {
+    return 5;
+  } else if (hackLevel > 500) {
+    return 4;
+  } else if (hackLevel > 325) {
+    return 3;
+  } else if (hackLevel > 100) {
+    return 2;
+  }
+  return 1;
 };

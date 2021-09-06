@@ -1,24 +1,25 @@
-// import { BitBurner } from "../types/bitburner";
-// import { formatNumber } from "./formatNumber";
-// import { findArg } from "./shared-args";
+import { BitBurner } from "../types/bitburner";
 
-// const PROGRAMS = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP.exe"];
+const PROGRAMS = [
+  "brutessh.exe",
+  "ftpcrack.exe",
+  "relaysmtp.exe",
+  "httpworm.exe",
+  "sqlinject.exe",
+] as const;
 
-// export const buyProgram = (ns: BitBurner, ram: number) => {
-//   const count = findArg(ns.args, { key: "c", defaultValue: 1 });
-
-//   const cost = ns.getPurchasedServerCost(ram);
-//   if (canBuyProgram(ns, ram)) {
-//     ns.print(
-//       `buying ${count} server with ${ram}GB RAM for $${formatNumber(cost)}`
-//     );
-//     ns.purchaseServer("drone", ram);
-//   }
-// };
-
-// export const canBuyProgram = (ns: BitBurner, ram: number) => {
-//   return (
-//     ns.getServerMoneyAvailable("home") >= cost &&
-//     ns.getPurchasedServers().length < 25
-//   );
-// };
+export const buyPrograms = (ns: BitBurner, count: number) => {
+  const player = ns.getPlayer();
+  ns.purchaseProgram;
+  ns.purchaseTor;
+  if (!player.tor && ns.getServerMoneyAvailable("home") >= 200000) {
+    ns.purchaseTor();
+  }
+  for (const program of PROGRAMS.slice(0, count)) {
+    if (!ns.fileExists(program, "home")) {
+      try {
+        ns.purchaseProgram(program);
+      } catch (err) {}
+    }
+  }
+};

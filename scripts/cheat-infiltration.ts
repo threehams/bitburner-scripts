@@ -27,7 +27,6 @@ export async function main(ns: BitBurner) {
 const cheatSlash = async (ns: BitBurner) => {
   await waitFor(ns, () => getByText("p", "!ATTACKING!"));
 
-  console.log("attacking!");
   const event = new KeyboardEvent("keydown", { keyCode: 32, bubbles: true });
 
   const eventClone = Object.getOwnPropertyNames(
@@ -40,9 +39,9 @@ const cheatSlash = async (ns: BitBurner) => {
   eventClone.isTrusted = true;
   eventClone.preventDefault = () => {};
   // @ts-expect-error ditto
-  document.activeElement[
+  doc.activeElement[
     // @ts-expect-error ditto
-    Object.keys(document.activeElement!).find((attr) => {
+    Object.keys(doc.activeElement!).find((attr) => {
       return attr.startsWith("__reactEventHandlers");
     })
   ]?.onKeyDown?.(eventClone);

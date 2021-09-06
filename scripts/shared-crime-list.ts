@@ -30,17 +30,19 @@ export const crimeList = (ns: BitBurner) => {
       idealIncomeRate: stats.money / (stats.time / 1000),
       incomeRate,
       statRates: {
-        dexterity: statRate(stats.dexterity_exp, stats.time),
-        strength: statRate(stats.strength_exp, stats.time),
-        hacking: statRate(stats.hacking_exp, stats.time),
-        defense: statRate(stats.defense_exp, stats.time),
-        agility: statRate(stats.agility_exp, stats.time),
-        charisma: statRate(stats.charisma_exp, stats.time),
+        dexterity: statRate(stats.dexterity_exp, stats.time, chance),
+        strength: statRate(stats.strength_exp, stats.time, chance),
+        hacking: statRate(stats.hacking_exp, stats.time, chance),
+        defense: statRate(stats.defense_exp, stats.time, chance),
+        agility: statRate(stats.agility_exp, stats.time, chance),
+        charisma: statRate(stats.charisma_exp, stats.time, chance),
+        karma: statRate(stats.karma * chance, stats.time, 1),
       },
     };
   });
 };
 
-const statRate = (stat: number, time: number) => {
-  return stat / (time / 1000);
+const statRate = (stat: number, time: number, chance: number) => {
+  const amount = stat * chance + stat * 0.25 * (1 - chance);
+  return amount / (time / 1000);
 };
