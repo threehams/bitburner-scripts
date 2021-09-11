@@ -46,7 +46,7 @@ export async function main(ns: BitBurner) {
   ]);
 
   while (true) {
-    nukeAll(ns);
+    await nukeAll(ns);
     const serverRam = SERVER_RAM;
     while (canBuyServer(ns, serverRam)) {
       buyServer(ns, serverRam);

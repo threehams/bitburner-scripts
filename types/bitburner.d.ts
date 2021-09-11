@@ -179,6 +179,615 @@ export type FactionName =
   | "CyberSec"
   | "Bladeburners";
 
+type IndustryName =
+  | "Energy"
+  | "Utilities"
+  | "Agriculture"
+  | "Fishing"
+  | "Mining"
+  | "Food"
+  | "Tobacco"
+  | "Chemical"
+  | "Pharmaceutical"
+  | "Computer"
+  | "Robotics"
+  | "Software"
+  | "Healthcare"
+  | "RealEstate";
+type DivisionName = string;
+type MaterialName =
+  | "Water"
+  | "Energy"
+  | "Food"
+  | "Plants"
+  | "Metal"
+  | "Hardware"
+  | "Chemicals"
+  | "Real Estate"
+  | "Drugs"
+  | "Robots"
+  | "AI Cores";
+
+export type Employee = {
+  ctor: string;
+  data: EmployeeData;
+};
+
+export type EmployeeData = {
+  pro: number;
+  cyclesUntilRaise: number;
+  name: string;
+  mor: number;
+  hap: number;
+  ene: number;
+  int: number;
+  cha: number;
+  exp: number;
+  cre: number;
+  eff: number;
+  sal: number;
+  loc: string;
+  pos: string;
+};
+
+export type Office = {
+  ctor: string;
+  data: OfficeData;
+};
+
+export type OfficeData = {
+  minEne: number;
+  maxEne: number;
+  minHap: number;
+  maxHap: number;
+  maxMor: number;
+  employees: Employee[];
+  employeeProd: EmployeeProd;
+  loc: string;
+  size: number;
+  tier: string;
+  cost: number;
+  comf: number;
+  beau: number;
+};
+
+export type EmployeeProd = {
+  Operations: number;
+  Engineer: number;
+  Business: number;
+  Management: number;
+  "Research & Development": number;
+  total: number;
+  Unassigned: number;
+};
+
+export type Material = {
+  ctor: string;
+  data: MaterialData;
+};
+
+export type MaterialData = {
+  name: string;
+  qty: number;
+  qlt: number;
+  dmd: number;
+  dmdR: number[];
+  cmp: number;
+  cmpR: number[];
+  mv: number;
+  mku: number;
+  buy: number;
+  sll: number;
+  prd: number;
+  imp: number;
+  exp: any[];
+  totalExp: number;
+  bCost: number;
+  sCost: number;
+  prdman: [boolean, number];
+  sllman: [boolean, number];
+  marketTa1: boolean;
+  marketTa2: boolean;
+  marketTa2Price: number;
+};
+export type Product = {
+  ctor: string;
+  data: ProductData;
+};
+
+export type ProductData = {
+  name: string;
+  dmd: number;
+  cmp: number;
+  mku: number;
+  pCost: number;
+  sCost: string;
+  fin: boolean;
+  prog: number;
+  createCity: string;
+  designCost: number;
+  advCost: number;
+  rat: number;
+  qlt: number;
+  per: number;
+  dur: number;
+  rel: number;
+  aes: number;
+  fea: number;
+  data: ProductDataData;
+  loc: string;
+  siz: number;
+  reqMats: ReqMats;
+  prdman: Prdman;
+  sllman: Sllman;
+  marketTa1: boolean;
+  marketTa2: boolean;
+  marketTa2Price: MarketTa2Price;
+};
+
+export type ProductDataData = {
+  Aevum: number[];
+  Chongqing: number[];
+  Ishima: number[];
+  "New Tokyo": number[];
+  "Sector-12": number[];
+  Volhaven: number[];
+};
+
+export type MarketTa2Price = {
+  Aevum: number;
+  Chongqing: number;
+  Ishima: number;
+  "New Tokyo": number;
+  "Sector-12": number;
+  Volhaven: number;
+};
+
+export type Prdman = {
+  Aevum: [boolean, number];
+  Chongqing: [boolean, number];
+  Ishima: [boolean, number];
+  "New Tokyo": [boolean, number];
+  "Sector-12": [boolean, number];
+  Volhaven: [boolean, number];
+};
+
+export type ReqMats = { [Key in MaterialName]?: number };
+
+export type Sllman = {
+  Aevum: [boolean, string];
+  Chongqing: [boolean, string];
+  Ishima: [boolean, string];
+  "New Tokyo": [boolean, string];
+  "Sector-12": [boolean, string];
+  Volhaven: [boolean, string];
+};
+
+export interface Warehouse {
+  ctor: string;
+  data: WarehouseData;
+}
+
+export interface WarehouseData {
+  breakdown: string;
+  level: number;
+  sizeUsed: number;
+  smartSupplyEnabled: boolean;
+  smartSupplyUseLeftovers: SmartSupplyUseLeftovers;
+  smartSupplyStore: number;
+  loc: string;
+  size: number;
+  materials: Materials;
+}
+
+export interface Materials {
+  Water: Material;
+  Energy: Material;
+  Food: Material;
+  Plants: Material;
+  Metal: Material;
+  Hardware: Material;
+  Chemicals: Material;
+  Drugs: Material;
+  Robots: Material;
+  AICores: Material;
+  RealEstate: Material;
+}
+
+export interface SmartSupplyUseLeftovers {
+  Water: boolean;
+  Energy: boolean;
+  Food: boolean;
+  Plants: boolean;
+  Metal: boolean;
+  Hardware: boolean;
+  Chemicals: boolean;
+  Drugs: boolean;
+  Robots: boolean;
+  AICores: boolean;
+  RealEstate: boolean;
+}
+
+export interface Division {
+  ctor: string;
+  data: DivisionData;
+}
+
+export interface DivisionData {
+  name: string;
+  type: string;
+  sciResearch: SciResearch;
+  researched: Researched;
+  reqMats: ReqMats;
+  prodMats: ProdMat[];
+  products: Products;
+  makesProducts: boolean;
+  awareness: number;
+  popularity: number;
+  startingCost: number;
+  reFac: number;
+  sciFac: number;
+  hwFac: number;
+  robFac: number;
+  aiFac: number;
+  advFac: number;
+  prodMult: number;
+  upgrades: number[];
+  state: string;
+  newInd: boolean;
+  offices: Offices;
+  lastCycleRevenue: string;
+  lastCycleExpenses: string;
+  thisCycleRevenue: string;
+  thisCycleExpenses: string;
+  warehouses: Warehouses;
+}
+
+export interface Offices {
+  Aevum: OfficesAevum;
+  Chongqing: OfficesAevum;
+  "Sector-12": OfficesAevum;
+  "New Tokyo": OfficesAevum;
+  Ishima: OfficesAevum;
+  Volhaven: OfficesAevum;
+}
+
+export interface OfficesAevum {
+  ctor: string;
+  data: PurpleData;
+}
+
+export interface PurpleData {
+  minEne: number;
+  maxEne: number;
+  minHap: number;
+  maxHap: number;
+  maxMor: number;
+  employees: Employee[];
+  employeeProd: EmployeeProd;
+  loc: string;
+  size: number;
+  tier: string;
+  cost: number;
+  comf: number;
+  beau: number;
+}
+
+export enum EmployeeCtor {
+  Employee = "Employee",
+}
+
+export enum Pos {
+  Engineer = "Engineer",
+  Management = "Management",
+  Operations = "Operations",
+  ResearchDevelopment = "Research & Development",
+}
+
+export enum ProdMat {
+  Food = "Food",
+  Plants = "Plants",
+}
+
+export interface Products {}
+
+export interface Researched {
+  "Hi-Tech R&D Laboratory": boolean;
+  Drones: boolean;
+}
+
+export interface SciResearch {
+  ctor: SciResearchCtor;
+  data: SciResearchData;
+}
+
+export enum SciResearchCtor {
+  Material = "Material",
+}
+
+export interface SciResearchData {
+  name: string;
+  qty: number;
+  qlt: number;
+  dmd: number;
+  dmdR: number[];
+  cmp: number;
+  cmpR: number[];
+  mv: number;
+  mku: number;
+  buy: number;
+  sll: number;
+  prd: number;
+  imp: number;
+  exp: any[];
+  totalExp: number;
+  bCost: number;
+  sCost: number;
+  prdman: Array<boolean | number>;
+  sllman: Array<boolean | number>;
+  marketTa1: boolean;
+  marketTa2: boolean;
+  marketTa2Price: number;
+}
+
+export interface Warehouses {
+  Aevum: WarehousesAevum;
+  Chongqing: WarehousesAevum;
+  "Sector-12": WarehousesAevum;
+  "New Tokyo": WarehousesAevum;
+  Ishima: WarehousesAevum;
+  Volhaven: WarehousesAevum;
+}
+
+export interface WarehousesAevum {
+  ctor: string;
+  data: WarehouseData;
+}
+
+export interface WarehouseData {
+  breakdown: string;
+  level: number;
+  sizeUsed: number;
+  smartSupplyEnabled: boolean;
+  smartSupplyUseLeftovers: SmartSupplyUseLeftovers;
+  smartSupplyStore: number;
+  loc: string;
+  size: number;
+  materials: Materials;
+}
+
+export interface Materials {
+  Water: Material;
+  Energy: Material;
+  Food: Material;
+  Plants: Material;
+  Metal: Material;
+  Hardware: Material;
+  Chemicals: Material;
+  Drugs: Material;
+  Robots: Material;
+  AICores: Material;
+  RealEstate: Material;
+}
+
+export interface Food {
+  ctor: SciResearchCtor;
+  data: FoodData;
+}
+
+export interface FoodData {
+  name: ProdMat;
+  qty: number;
+  qlt: number;
+  dmd: number;
+  dmdR: number[];
+  cmp: number;
+  cmpR: number[];
+  mv: number;
+  mku: number;
+  buy: number;
+  sll: number;
+  prd: number;
+  imp: number;
+  exp: Exp[];
+  totalExp: number;
+  bCost: number;
+  sCost: SCost;
+  prdman: Array<boolean | number>;
+  sllman: Array<boolean | Amt>;
+  marketTa1: boolean;
+  marketTa2: boolean;
+  marketTa2Price: number;
+}
+
+export interface Exp {
+  ind: string;
+  city: string;
+  amt: Amt;
+}
+
+export enum Amt {
+  Max = "MAX",
+}
+
+export enum SCost {
+  Mp = "MP",
+}
+
+export interface SmartSupplyUseLeftovers {
+  Water: boolean;
+  Energy: boolean;
+  Food: boolean;
+  Plants: boolean;
+  Metal: boolean;
+  Hardware: boolean;
+  Chemicals: boolean;
+  Drugs: boolean;
+  Robots: boolean;
+  AICores: boolean;
+  RealEstate: boolean;
+}
+
+type CorporationUnlockUpgrade =
+  | "Export"
+  | "Smart Supply"
+  | "Market Research - Demand"
+  | "Market Data - Competition"
+  | "VeChain"
+  | "Shady Accounting"
+  | "Government Partnership";
+type EmployeeJob =
+  | "Operations"
+  | "Engineer"
+  | "Business"
+  | "Management"
+  | "Research & Development"
+  | "Training"
+  | "Unassigned";
+type ResearchName =
+  | "Hi-Tech R&D Laboratory"
+  | "AutoBrew"
+  | "AutoPartyManager"
+  | "Automatic Drug Administration"
+  | "Bulk Purchasing"
+  | "CPH4 Injections"
+  | "Drones"
+  | "Drones - Assembly"
+  | "Drones - Transport"
+  | "Go-Juice"
+  | "HRBuddy-Recruitment"
+  | "HRBuddy-Training"
+  | "JoyWire"
+  | "Market-TA.I"
+  | "Market-TA.II"
+  | "Overclock"
+  | "Self-Correcting Assemblers"
+  | "Sti.mu"
+  | "uPgrade: Fulcrum"
+  | "uPgrade: Capacity.I"
+  | "uPgrade: Capacity.II"
+  | "uPgrade: Dashboard";
+
+export type CorporationApi = {
+  expandIndustry(industryName: IndustryName, divisionName: DivisionName): void;
+  expandCity(divisionName: DivisionName, cityName: City): void;
+  unlockUpgrade(upgradeName: CorporationUnlockUpgrade): void;
+  levelUpgrade(upgradeName: CorporationUnlockUpgrade): void;
+  issueDividends(percent: number): void;
+  sellMaterial(
+    divisionName: DivisionName,
+    cityName: City,
+    materialName: MaterialName,
+    amt: number,
+    price: number,
+  ): void;
+  sellProduct(
+    divisionName: DivisionName,
+    cityName: City,
+    productName: string,
+    amt: number,
+    price: number,
+    all: boolean,
+  ): void;
+  discontinueProduct(divisionName: DivisionName, productName: string): void;
+  setSmartSupply(
+    divisionName: DivisionName,
+    cityName: City,
+    enabled: boolean,
+  ): void;
+  setSmartSupplyUseLeftovers(): void;
+  buyMaterial(
+    divisionName: DivisionName,
+    cityName: City,
+    materialName: MaterialName,
+    amt: number,
+  ): void;
+  employees(divisionName: DivisionName, cityName: City): Employee[];
+  assignJob(
+    divisionName: DivisionName,
+    cityName: City,
+    employeeName: string,
+    job: EmployeeJob,
+  ): void;
+  hireEmployee(divisionName: DivisionName, cityName: City): void;
+  upgradeOfficeSize(
+    divisionName: DivisionName,
+    cityName: City,
+    size: number,
+  ): void;
+  throwParty(
+    divisionName: DivisionName,
+    cityName: City,
+    costPerEmployee: number,
+  ): void;
+  purchaseWarehouse(divisionName: DivisionName, cityName: City): void;
+  upgradeWarehouse(divisionName: DivisionName, cityName: City): void;
+  buyCoffee(divisionName: DivisionName, cityName: City): void;
+  hireAdVert(divisionName: DivisionName): void;
+  makeProduct(
+    divisionName: DivisionName,
+    cityName: City,
+    productName: string,
+    designInvest: number,
+    marketingInvest: number,
+  ): void;
+  research(divisionName: DivisionName, researchName: ResearchName): void;
+  exportMaterial(
+    sourceDivision: DivisionName,
+    sourceCity: City,
+    targetDivision: DivisionName,
+    targetCity: City,
+    materialName: MaterialName,
+    amt: number,
+  ): void;
+  cancelExportMaterial(
+    sourceDivision: DivisionName,
+    sourceCity: City,
+    targetDivision: DivisionName,
+    targetCity: City,
+    materialName: MaterialName,
+    amt: number,
+  ): void;
+  setMaterialMarketTA1(
+    divisionName: DivisionName,
+    cityName: City,
+    materialName: City,
+    on: boolean,
+  ): void;
+  setMaterialMarketTA2(
+    divisionName: DivisionName,
+    cityName: City,
+    materialName: MaterialName,
+    on: boolean,
+  ): void;
+  setProductMarketTA1(
+    divisionName: DivisionName,
+    productName: Product,
+    on: boolean,
+  ): void;
+  setProductMarketTA2(
+    divisionName: DivisionName,
+    productName: string,
+    on: boolean,
+  ): void;
+  // If you modify these objects you will affect them for real, it's not
+  // copies.
+  getDivision(divisionName: DivisionName): Division;
+  getOffice(divisionName: DivisionName, cityName: City): Office;
+  getWarehouse(divisionName: DivisionName, cityName: City): Warehouse;
+  getMaterial(
+    divisionName: DivisionName,
+    cityName: City,
+    materialName: MaterialName,
+  ): Material;
+  getProduct(divisionName: DivisionName, productName: string): Product;
+  getEmployee(
+    divisionName: DivisionName,
+    cityName: City,
+    employeeName: string,
+  ): Employee;
+};
+
 export type GangName =
   | "Slum Snakes"
   | "Tetrads"
@@ -1161,7 +1770,7 @@ export type GangOtherInfo = {
 };
 
 type UnionToIntersection<T> = (T extends T ? (p: T) => void : never) extends (
-  p: infer U
+  p: infer U,
 ) => void
   ? U
   : never;
@@ -1299,48 +1908,82 @@ export interface GangTasksTerritory {
 }
 
 export interface GangMemberInfo {
-  /** Agility stat */
-  agility: number;
-  /** Agility multiplier from equipment. Decimal form */
-  agilityEquipMult: number;
-  /** Agility multiplier from ascension. Decimal form */
-  agilityAscensionMult: number;
-  /** Array of names of all owned Augmentations */
-  augmentations: GangAugmentations[];
-  /** Charisma stat */
-  charisma: number;
-  /** Charisma multiplier from equipment. Decimal form */
-  charismaEquipMult: number;
-  /** Charisma multiplier from ascension. Decimal form */
-  charismaAscensionMult: number;
-  /** Defense stat */
-  defense: number;
-  /** Defense multiplier from equipment. Decimal form */
-  defenseEquipMult: number;
-  /** Defense multiplier from ascension. Decimal form */
-  defenseAscensionMult: number;
-  /** Dexterity stat */
-  dexterity: number;
-  /** Dexterity multiplier from equipment. Decimal form */
-  dexterityEquipMult: number;
-  /** Dexterity multiplier from ascension. Decimal form */
-  dexterityAscensionMult: number;
-  /** Array of names of all owned Non-Augmentation Equipment */
-  equipment: GangEquipment[];
+  /** Name of this member. */
+  name: string;
+  /** Name of currently assigned task. */
+  task: string;
+  /** Total amount of respect earned by this member. */
+  earnedRespect: number;
+
   /** Hacking stat */
-  hacking: number;
-  /** Hacking multiplier from equipment. Decimal form */
-  hackingEquipMult: number;
-  /** Hacking multiplier from ascension. Decimal form */
-  hackingAscensionMult: number;
+  hack: number;
   /** Strength stat */
-  strength: number;
+  str: number;
+  /** Defense stat */
+  def: number;
+  /** Dexterity stat */
+  dex: number;
+  /** Agility stat */
+  agi: number;
+  /** Charisma stat */
+  cha: number;
+
+  /** Hacking experience */
+  hack_exp: number;
+  /** Strength experience */
+  str_exp: number;
+  /** Defense experience */
+  def_exp: number;
+  /** Dexterity experience */
+  dex_exp: number;
+  /** Agility experience */
+  agi_exp: number;
+  /** Charisma experience */
+  cha_exp: number;
+
+  /** Hacking multiplier from equipment. Decimal form */
+  hack_mult: number;
   /** Strength multiplier from equipment. Decimal form */
-  strengthEquipMult: number;
+  str_mult: number;
+  /** Defense multiplier from equipment. Decimal form */
+  def_mult: number;
+  /** Dexterity multiplier from equipment. Decimal form */
+  dex_mult: number;
+  /** Agility multiplier from equipment. Decimal form */
+  agi_mult: number;
+  /** Charisma multiplier from equipment. Decimal form */
+  cha_mult: number;
+
+  /** Hacking multiplier from ascension. Decimal form */
+  hack_asc_mult: number;
   /** Strength multiplier from ascension. Decimal form */
-  strengthAscensionMult: number;
-  /** Name of currently assigned task */
-  task: GangTasks;
+  str_asc_mult: number;
+  /** Defense multiplier from ascension. Decimal form */
+  def_asc_mult: number;
+  /** Dexterity multiplier from ascension. Decimal form */
+  dex_asc_mult: number;
+  /** Agility multiplier from ascension. Decimal form */
+  agi_asc_mult: number;
+  /** Charisma multiplier from ascension. Decimal form */
+  cha_asc_mult: number;
+
+  /** Hacking ascension points. */
+  hack_asc_points: number;
+  /** Strength ascension points. */
+  str_asc_points: number;
+  /** Defense ascension points. */
+  def_asc_points: number;
+  /** Dexterity ascension points. */
+  dex_asc_points: number;
+  /** Agility ascension points. */
+  agi_asc_points: number;
+  /** Charisma ascension points. */
+  cha_asc_points: number;
+
+  /** Array of names of all owned Non-Augmentation Equipment */
+  upgrades: string[];
+  /** Array of names of all owned Augmentations */
+  augmentations: string[];
 }
 
 export interface GangMemberAscension {
@@ -1362,211 +2005,9 @@ export interface GangMemberAscension {
 
 export interface SleeveStats {
   /** current shock of the sleeve [0-100] */
-  shock:
-    | 0
-    | 1
-    | 2
-    | 3
-    | 4
-    | 5
-    | 6
-    | 7
-    | 8
-    | 9
-    | 10
-    | 11
-    | 12
-    | 13
-    | 14
-    | 15
-    | 16
-    | 17
-    | 18
-    | 19
-    | 20
-    | 21
-    | 22
-    | 23
-    | 24
-    | 25
-    | 26
-    | 27
-    | 28
-    | 29
-    | 30
-    | 31
-    | 32
-    | 33
-    | 34
-    | 35
-    | 36
-    | 37
-    | 38
-    | 39
-    | 40
-    | 41
-    | 42
-    | 43
-    | 44
-    | 45
-    | 46
-    | 47
-    | 48
-    | 49
-    | 50
-    | 51
-    | 52
-    | 53
-    | 54
-    | 55
-    | 56
-    | 57
-    | 58
-    | 59
-    | 60
-    | 61
-    | 62
-    | 63
-    | 64
-    | 65
-    | 66
-    | 67
-    | 68
-    | 69
-    | 70
-    | 71
-    | 72
-    | 73
-    | 74
-    | 75
-    | 76
-    | 77
-    | 78
-    | 79
-    | 80
-    | 81
-    | 82
-    | 83
-    | 84
-    | 85
-    | 86
-    | 87
-    | 88
-    | 89
-    | 90
-    | 91
-    | 92
-    | 93
-    | 94
-    | 95
-    | 96
-    | 97
-    | 98
-    | 99
-    | 100;
+  shock: number;
   /** current sync of the sleeve [0-100] */
-  sync:
-    | 0
-    | 1
-    | 2
-    | 3
-    | 4
-    | 5
-    | 6
-    | 7
-    | 8
-    | 9
-    | 10
-    | 11
-    | 12
-    | 13
-    | 14
-    | 15
-    | 16
-    | 17
-    | 18
-    | 19
-    | 20
-    | 21
-    | 22
-    | 23
-    | 24
-    | 25
-    | 26
-    | 27
-    | 28
-    | 29
-    | 30
-    | 31
-    | 32
-    | 33
-    | 34
-    | 35
-    | 36
-    | 37
-    | 38
-    | 39
-    | 40
-    | 41
-    | 42
-    | 43
-    | 44
-    | 45
-    | 46
-    | 47
-    | 48
-    | 49
-    | 50
-    | 51
-    | 52
-    | 53
-    | 54
-    | 55
-    | 56
-    | 57
-    | 58
-    | 59
-    | 60
-    | 61
-    | 62
-    | 63
-    | 64
-    | 65
-    | 66
-    | 67
-    | 68
-    | 69
-    | 70
-    | 71
-    | 72
-    | 73
-    | 74
-    | 75
-    | 76
-    | 77
-    | 78
-    | 79
-    | 80
-    | 81
-    | 82
-    | 83
-    | 84
-    | 85
-    | 86
-    | 87
-    | 88
-    | 89
-    | 90
-    | 91
-    | 92
-    | 93
-    | 94
-    | 95
-    | 96
-    | 97
-    | 98
-    | 99
-    | 100;
+  sync: number;
   /** current hacking skill of the sleeve */
   hacking_skill: number;
   /** current strength of the sleeve */
@@ -1717,7 +2158,7 @@ export interface TIX {
   getStockPurchaseCost(
     sym: StockSymbol,
     shares: Number,
-    posType: OrderPos
+    posType: OrderPos,
   ): number;
 
   /**
@@ -1832,7 +2273,7 @@ export interface TIX {
     shares: number,
     price: number,
     type: OrderType,
-    pos: OrderPos
+    pos: OrderPos,
   ): boolean;
 
   /**
@@ -1853,7 +2294,7 @@ export interface TIX {
     shares: number,
     price: number,
     type: OrderType,
-    pos: OrderPos
+    pos: OrderPos,
   ): void;
 
   /**
@@ -1995,7 +2436,7 @@ export interface Singularity {
    */
   universityCourse(
     universityName: University,
-    courseName: UniversityCourse
+    courseName: UniversityCourse,
   ): boolean;
 
   /**
@@ -2891,7 +3332,7 @@ export interface BladeBurner {
       | BladeburnerGenActions
       | BladeburnerContracts
       | BladeburnerOperations
-      | BladeburnerBlackOps
+      | BladeburnerBlackOps,
   ): boolean;
 
   /**
@@ -2933,7 +3374,7 @@ export interface BladeBurner {
       | BladeburnerGenActions
       | BladeburnerContracts
       | BladeburnerOperations
-      | BladeburnerBlackOps
+      | BladeburnerBlackOps,
   ): number;
 
   /**
@@ -2955,7 +3396,7 @@ export interface BladeBurner {
       | BladeburnerGenActions
       | BladeburnerContracts
       | BladeburnerOperations
-      | BladeburnerBlackOps
+      | BladeburnerBlackOps,
   ): [number, number];
 
   /**
@@ -2979,7 +3420,7 @@ export interface BladeBurner {
       | BladeburnerContracts
       | BladeburnerOperations
       | BladeburnerBlackOps,
-    level: number
+    level: number,
   ): number;
 
   /**
@@ -3004,7 +3445,7 @@ export interface BladeBurner {
       | BladeburnerGenActions
       | BladeburnerContracts
       | BladeburnerOperations
-      | BladeburnerBlackOps
+      | BladeburnerBlackOps,
   ): number;
 
   /**
@@ -3026,7 +3467,7 @@ export interface BladeBurner {
       | BladeburnerGenActions
       | BladeburnerContracts
       | BladeburnerOperations
-      | BladeburnerBlackOps
+      | BladeburnerBlackOps,
   ): number;
 
   /**
@@ -3048,7 +3489,7 @@ export interface BladeBurner {
       | BladeburnerGenActions
       | BladeburnerContracts
       | BladeburnerOperations
-      | BladeburnerBlackOps
+      | BladeburnerBlackOps,
   ): number;
 
   /**
@@ -3070,7 +3511,7 @@ export interface BladeBurner {
       | BladeburnerGenActions
       | BladeburnerContracts
       | BladeburnerOperations
-      | BladeburnerBlackOps
+      | BladeburnerBlackOps,
   ): boolean;
 
   /**
@@ -3091,7 +3532,7 @@ export interface BladeBurner {
       | BladeburnerContracts
       | BladeburnerOperations
       | BladeburnerBlackOps,
-    autoLevel: boolean
+    autoLevel: boolean,
   ): void;
 
   /**
@@ -3112,7 +3553,7 @@ export interface BladeBurner {
       | BladeburnerContracts
       | BladeburnerOperations
       | BladeburnerBlackOps,
-    level: number
+    level: number,
   ): void;
 
   /**
@@ -3212,7 +3653,7 @@ export interface BladeBurner {
       | BladeburnerGenActions
       | BladeburnerContracts
       | BladeburnerOperations
-      | BladeburnerBlackOps
+      | BladeburnerBlackOps,
   ): number;
 
   /**
@@ -3236,7 +3677,7 @@ export interface BladeBurner {
       | BladeburnerContracts
       | BladeburnerOperations
       | BladeburnerBlackOps,
-    size: number
+    size: number,
   ): number;
 
   /**
@@ -3382,7 +3823,7 @@ export interface CodingContract {
   attempt(
     answer: string | string[] | number,
     filename: string,
-    host?: Host
+    host?: Host,
   ): boolean;
 
   /**
@@ -3399,7 +3840,7 @@ export interface CodingContract {
     answer: string | string[] | number,
     filename: string,
     host?: Host,
-    opts?: CodingAttemptOptions
+    opts?: CodingAttemptOptions,
   ): boolean | string;
 
   /**
@@ -3580,7 +4021,7 @@ export interface Gang {
    * @returns Type of the equipment.
    */
   getEquipmentType(
-    equipName: GangEquipment | GangAugmentations
+    equipName: GangEquipment | GangAugmentations,
   ): GangEquipmentType;
 
   /**
@@ -3593,7 +4034,7 @@ export interface Gang {
    * @returns A dictionary containing the stats of the equipment.
    */
   getEquipmentStats(
-    equipName: GangEquipment | GangAugmentations
+    equipName: GangEquipment | GangAugmentations,
   ): GangEquipmentStats;
 
   /**
@@ -3608,7 +4049,7 @@ export interface Gang {
    */
   purchaseEquipment(
     memberName: string,
-    equipName: GangEquipment | GangAugmentations
+    equipName: GangEquipment | GangAugmentations,
   ): boolean;
 
   /**
@@ -3752,7 +4193,7 @@ export interface Sleeve {
   setToFactionWork(
     sleeveNumber: number,
     factionName: FactionName,
-    factionWorkType: FactionWork
+    factionWorkType: FactionWork,
   ): boolean;
 
   /**
@@ -3781,7 +4222,7 @@ export interface Sleeve {
   setToUniversityCourse(
     sleeveNumber: number,
     university: University,
-    className: UniversityCourse
+    className: UniversityCourse,
   ): boolean;
 
   /**
@@ -4449,7 +4890,7 @@ export interface BitBurner extends TIX, Singularity {
     files: string | ReadonlyArray<string>,
     source: Host,
     // tslint:disable-next-line:unified-signatures
-    destination: Host
+    destination: Host,
   ): boolean;
 
   /**
@@ -4894,7 +5335,7 @@ export interface BitBurner extends TIX, Singularity {
         server: Server,
         threads: number,
         player: Player,
-        cores: number
+        cores: number,
       ) => number;
 
       /**
@@ -4999,7 +5440,7 @@ export interface BitBurner extends TIX, Singularity {
       levelUpgradeCost: (
         startingLevel: number,
         extraLevels?: number,
-        costMultiplier?: number
+        costMultiplier?: number,
       ) => number;
 
       /**
@@ -5020,7 +5461,7 @@ export interface BitBurner extends TIX, Singularity {
       ramUpgradeCost: (
         startingRam: number,
         extraRamLevels?: number,
-        costMultiplier?: number
+        costMultiplier?: number,
       ) => number;
 
       /**
@@ -5041,7 +5482,7 @@ export interface BitBurner extends TIX, Singularity {
       coreUpgradeCost: (
         startingCores: number,
         extraCores?: number,
-        costMultiplier?: number
+        costMultiplier?: number,
       ) => number;
 
       /**
@@ -5101,7 +5542,7 @@ export interface BitBurner extends TIX, Singularity {
         level: number,
         ramUsed: number,
         maxRam: number,
-        core: number
+        core: number,
       ) => number;
 
       /**
@@ -5122,7 +5563,7 @@ export interface BitBurner extends TIX, Singularity {
       levelUpgradeCost: (
         startingLevel: number,
         extraLevels?: number,
-        costMultiplier?: number
+        costMultiplier?: number,
       ) => number;
 
       /**
@@ -5144,7 +5585,7 @@ export interface BitBurner extends TIX, Singularity {
       ramUpgradeCost: (
         startingRam: number,
         extraRamLevels?: number,
-        costMultiplier?: number
+        costMultiplier?: number,
       ) => number;
 
       /**
@@ -5165,7 +5606,7 @@ export interface BitBurner extends TIX, Singularity {
       coreUpgradeCost: (
         startingCores: number,
         extraCores?: number,
-        costMultiplier?: number
+        costMultiplier?: number,
       ) => number;
 
       /**
@@ -5186,7 +5627,7 @@ export interface BitBurner extends TIX, Singularity {
       cacheUpgradeCost: (
         startingCache: number,
         extraCacheLevels?: number,
-        costMultiplier?: number
+        costMultiplier?: number,
       ) => number;
 
       /**
@@ -5221,7 +5662,7 @@ export interface BitBurner extends TIX, Singularity {
        */
       hacknetServerCost: (
         serverIndex: number,
-        costMultiplier?: number
+        costMultiplier?: number,
       ) => number;
 
       /**
@@ -5330,7 +5771,7 @@ export interface BitBurner extends TIX, Singularity {
   write(
     handle: Handle,
     data?: string | string[] | number,
-    mode?: "w" | "a"
+    mode?: "w" | "a",
   ): void;
 
   /**
@@ -5568,9 +6009,9 @@ export interface BitBurner extends TIX, Singularity {
     Key extends string,
     TConfig extends
       | [readonly [Key, string | number | boolean | string[]]]
-      | Array<readonly [Key, any]>
+      | Array<readonly [Key, any]>,
   >(
-    config: TConfig
+    config: TConfig,
   ): Flatten<UnionToIntersection<FromEntries<TConfig[number]>>>;
 
   /**
@@ -5692,11 +6133,7 @@ export interface BitBurner extends TIX, Singularity {
    * @ramCost 4 GB
    * @returns Object containing the current BitNode multipliers.
    */
-  getBitNodeMultipliers(
-    url: string,
-    target: string,
-    host: string
-  ): BitNodeMultipliers;
+  getBitNodeMultipliers(): BitNodeMultipliers;
 
   /**
    * milliseconds in the “D M H S” format
@@ -5741,4 +6178,6 @@ export interface BitBurner extends TIX, Singularity {
    * @param args Values to be formatted
    */
   tprintf(...messages: Message[]): void;
+
+  corporation: CorporationApi;
 }

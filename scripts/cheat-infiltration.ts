@@ -5,6 +5,10 @@ const doc = eval("document") as Document;
 
 export async function main(ns: BitBurner) {
   while (true) {
+    const player = ns.getPlayer();
+    if (player.hp < player.max_hp) {
+      ns.hospitalize();
+    }
     if (getByText("h1", "Remember all the mines!")) {
       await solveMines(ns);
     } else if (getByText("h1", "Match the symbols!")) {
