@@ -209,11 +209,6 @@ type MaterialName =
   | "AI Cores";
 
 export type Employee = {
-  ctor: string;
-  data: EmployeeData;
-};
-
-export type EmployeeData = {
   pro: number;
   cyclesUntilRaise: number;
   name: string;
@@ -231,11 +226,6 @@ export type EmployeeData = {
 };
 
 export type Office = {
-  ctor: string;
-  data: OfficeData;
-};
-
-export type OfficeData = {
   minEne: number;
   maxEne: number;
   minHap: number;
@@ -262,11 +252,6 @@ export type EmployeeProd = {
 };
 
 export type Material = {
-  ctor: string;
-  data: MaterialData;
-};
-
-export type MaterialData = {
   name: string;
   qty: number;
   qlt: number;
@@ -290,12 +275,8 @@ export type MaterialData = {
   marketTa2: boolean;
   marketTa2Price: number;
 };
-export type Product = {
-  ctor: string;
-  data: ProductData;
-};
 
-export type ProductData = {
+export type Product = {
   name: string;
   dmd: number;
   cmp: number;
@@ -363,12 +344,7 @@ export type Sllman = {
   Volhaven: [boolean, string];
 };
 
-export interface Warehouse {
-  ctor: string;
-  data: WarehouseData;
-}
-
-export interface WarehouseData {
+export type Warehouse = {
   breakdown: string;
   level: number;
   sizeUsed: number;
@@ -378,9 +354,9 @@ export interface WarehouseData {
   loc: string;
   size: number;
   materials: Materials;
-}
+};
 
-export interface Materials {
+export type Materials = {
   Water: Material;
   Energy: Material;
   Food: Material;
@@ -392,9 +368,9 @@ export interface Materials {
   Robots: Material;
   AICores: Material;
   RealEstate: Material;
-}
+};
 
-export interface SmartSupplyUseLeftovers {
+export type SmartSupplyUseLeftovers = {
   Water: boolean;
   Energy: boolean;
   Food: boolean;
@@ -406,14 +382,9 @@ export interface SmartSupplyUseLeftovers {
   Robots: boolean;
   AICores: boolean;
   RealEstate: boolean;
-}
+};
 
-export interface Division {
-  ctor: string;
-  data: DivisionData;
-}
-
-export interface DivisionData {
+export type Division = {
   name: string;
   type: string;
   sciResearch: SciResearch;
@@ -441,41 +412,16 @@ export interface DivisionData {
   thisCycleRevenue: string;
   thisCycleExpenses: string;
   warehouses: Warehouses;
-}
+};
 
-export interface Offices {
-  Aevum: OfficesAevum;
-  Chongqing: OfficesAevum;
-  "Sector-12": OfficesAevum;
-  "New Tokyo": OfficesAevum;
-  Ishima: OfficesAevum;
-  Volhaven: OfficesAevum;
-}
-
-export interface OfficesAevum {
-  ctor: string;
-  data: PurpleData;
-}
-
-export interface PurpleData {
-  minEne: number;
-  maxEne: number;
-  minHap: number;
-  maxHap: number;
-  maxMor: number;
-  employees: Employee[];
-  employeeProd: EmployeeProd;
-  loc: string;
-  size: number;
-  tier: string;
-  cost: number;
-  comf: number;
-  beau: number;
-}
-
-export enum EmployeeCtor {
-  Employee = "Employee",
-}
+export type Offices = {
+  Aevum: Office;
+  Chongqing: Office;
+  "Sector-12": Office;
+  "New Tokyo": Office;
+  Ishima: Office;
+  Volhaven: Office;
+};
 
 export enum Pos {
   Engineer = "Engineer",
@@ -489,23 +435,14 @@ export enum ProdMat {
   Plants = "Plants",
 }
 
-export interface Products {}
+export type Products = {};
 
-export interface Researched {
+export type Researched = {
   "Hi-Tech R&D Laboratory": boolean;
   Drones: boolean;
-}
+};
 
-export interface SciResearch {
-  ctor: SciResearchCtor;
-  data: SciResearchData;
-}
-
-export enum SciResearchCtor {
-  Material = "Material",
-}
-
-export interface SciResearchData {
+export type SciResearch = {
   name: string;
   qty: number;
   qlt: number;
@@ -528,54 +465,18 @@ export interface SciResearchData {
   marketTa1: boolean;
   marketTa2: boolean;
   marketTa2Price: number;
-}
+};
 
-export interface Warehouses {
-  Aevum: WarehousesAevum;
-  Chongqing: WarehousesAevum;
-  "Sector-12": WarehousesAevum;
-  "New Tokyo": WarehousesAevum;
-  Ishima: WarehousesAevum;
-  Volhaven: WarehousesAevum;
-}
+export type Warehouses = {
+  Aevum: Warehouse;
+  Chongqing: Warehouse;
+  "Sector-12": Warehouse;
+  "New Tokyo": Warehouse;
+  Ishima: Warehouse;
+  Volhaven: Warehouse;
+};
 
-export interface WarehousesAevum {
-  ctor: string;
-  data: WarehouseData;
-}
-
-export interface WarehouseData {
-  breakdown: string;
-  level: number;
-  sizeUsed: number;
-  smartSupplyEnabled: boolean;
-  smartSupplyUseLeftovers: SmartSupplyUseLeftovers;
-  smartSupplyStore: number;
-  loc: string;
-  size: number;
-  materials: Materials;
-}
-
-export interface Materials {
-  Water: Material;
-  Energy: Material;
-  Food: Material;
-  Plants: Material;
-  Metal: Material;
-  Hardware: Material;
-  Chemicals: Material;
-  Drugs: Material;
-  Robots: Material;
-  AICores: Material;
-  RealEstate: Material;
-}
-
-export interface Food {
-  ctor: SciResearchCtor;
-  data: FoodData;
-}
-
-export interface FoodData {
+export type Food = {
   name: ProdMat;
   qty: number;
   qlt: number;
@@ -598,13 +499,13 @@ export interface FoodData {
   marketTa1: boolean;
   marketTa2: boolean;
   marketTa2Price: number;
-}
+};
 
-export interface Exp {
+export type Exp = {
   ind: string;
   city: string;
   amt: Amt;
-}
+};
 
 export enum Amt {
   Max = "MAX",
@@ -612,20 +513,6 @@ export enum Amt {
 
 export enum SCost {
   Mp = "MP",
-}
-
-export interface SmartSupplyUseLeftovers {
-  Water: boolean;
-  Energy: boolean;
-  Food: boolean;
-  Plants: boolean;
-  Metal: boolean;
-  Hardware: boolean;
-  Chemicals: boolean;
-  Drugs: boolean;
-  Robots: boolean;
-  AICores: boolean;
-  RealEstate: boolean;
 }
 
 type CorporationUnlockUpgrade =
