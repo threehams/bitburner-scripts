@@ -203,10 +203,10 @@ type MaterialName =
   | "Metal"
   | "Hardware"
   | "Chemicals"
-  | "Real Estate"
   | "Drugs"
   | "Robots"
-  | "AI Cores";
+  | "AICores"
+  | "RealEstate";
 
 export type Employee = {
   pro: number;
@@ -565,8 +565,8 @@ export type CorporationApi = {
     divisionName: DivisionName,
     cityName: City,
     materialName: MaterialName,
-    amt: number,
-    price: number,
+    amt: string | "MAX",
+    price: string | "MP",
   ): void;
   sellProduct(
     divisionName: DivisionName,
