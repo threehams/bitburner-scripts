@@ -26,7 +26,7 @@ type Processes = {
   };
 };
 
-export async function main(ns: BitBurner) {
+export const main = async (ns: BitBurner) => {
   const {
     h: home,
     o: once,
@@ -59,7 +59,7 @@ export async function main(ns: BitBurner) {
     }
     buyPrograms(ns, getProgramCount(ns));
     const sources = (home ? ["home"] : []).concat(
-      allServers(ns).filter((server) => ns.hasRootAccess(server))
+      allServers(ns).filter((server) => ns.hasRootAccess(server)),
     );
     const processes: Processes = {};
     for (const source of sources) {
@@ -140,13 +140,13 @@ export async function main(ns: BitBurner) {
 
         const threads = Math.min(
           availableThreads,
-          Math.max(maxThreads - currentThreads, 0)
+          Math.max(maxThreads - currentThreads, 0),
         );
 
         if (threads) {
           verbose &&
             ns.tprint(
-              `running ${SCRIPTS[action]} on ${source} with ${threads} threads against ${target.name}`
+              `running ${SCRIPTS[action]} on ${source} with ${threads} threads against ${target.name}`,
             );
           ns.exec(SCRIPTS[action], source, threads, target.name);
           processes[target.name]![action]! += threads;
@@ -168,7 +168,7 @@ export async function main(ns: BitBurner) {
         }
         if (verbose) {
           ns.tprint(
-            `grinding experience: running ${SCRIPTS[action]} on ${source} with ${threads} threads against ${target}`
+            `grinding experience: running ${SCRIPTS[action]} on ${source} with ${threads} threads against ${target}`,
           );
         }
         ns.exec(SCRIPTS[action], source, threads, target);
@@ -181,17 +181,17 @@ export async function main(ns: BitBurner) {
       return;
     }
   }
-}
+};
 
 const getThreadCount = (
   ns: BitBurner,
   server: string,
   ram: number,
-  max?: boolean
+  max?: boolean,
 ) => {
   const [totalRam, usedRam] = ns.getServerRam(server);
   const threads = Math.floor(
-    (totalRam - (max ? 0 : usedRam) - (server === "home" ? 0 : 0)) / ram
+    (totalRam - (max ? 0 : usedRam) - (server === "home" ? 0 : 0)) / ram,
   );
   // it happens
   return Math.max(0, threads);
@@ -252,14 +252,14 @@ const getBestAction = ({
       verbose &&
         threads > totalThreads &&
         ns.tprint(
-          `required weaken threads ${threads} < total threads ${totalThreads}`
+          `required weaken threads ${threads} < total threads ${totalThreads}`,
         );
       verbose &&
         tooSlow &&
         ns.tprint(
           `required weaken time of ${ns
             .getWeakenTime(target)
-            .toFixed(0)}s is too slow`
+            .toFixed(0)}s is too slow`,
         );
       return {};
     }
@@ -276,8 +276,9 @@ const getBestAction = ({
     const threads = Math.ceil(
       ns.growthAnalyze(
         target,
-        ns.getServerMaxMoney(target) / (ns.getServerMoneyAvailable(target) || 1)
-      )
+        ns.getServerMaxMoney(target) /
+          (ns.getServerMoneyAvailable(target) || 1),
+      ),
     );
     if (
       threads > totalThreads * 3 &&
@@ -286,7 +287,7 @@ const getBestAction = ({
     ) {
       verbose &&
         ns.tprint(
-          `required grow threads ${threads} < total threads ${totalThreads}`
+          `required grow threads ${threads} < total threads ${totalThreads}`,
         );
       return {};
     }

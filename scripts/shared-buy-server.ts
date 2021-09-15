@@ -14,6 +14,6 @@ export const canBuyServer = (ns: BitBurner, ram: number) => {
   const cost = ns.getPurchasedServerCost(ram);
   return (
     ns.getServerMoneyAvailable("home") >= cost &&
-    ns.getPurchasedServers().length < 25
+    ns.getPurchasedServers().length < ns.getPurchasedServerLimit()
   );
 };
